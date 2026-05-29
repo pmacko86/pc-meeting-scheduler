@@ -96,11 +96,21 @@ def build_parser() -> argparse.ArgumentParser:
                    help="Reviewer scheduling preferences CSV (e.g. from Xoyondo).")
     p.add_argument("-c", "--config", metavar="FILE", type=Path,
                    help="Configuration YAML or JSON file.")
+    p.add_argument("--color", choices=["always", "auto", "never"], default="auto",
+                   help="Color output: always, auto (default, TTY detection), or never.")
+    p.add_argument("-v", "--verbose", action="store_true", default=False,
+                   help="Verbose output (sets --reviewer-report default to 'summary').")
+    p.add_argument("--reviewer-report", choices=["full", "summary", "none"],
+                   default=None,
+                   help="Reviewer matching report: full, summary (total line only), or none. "
+                        "Default: summary if --verbose, none otherwise.")
     p.add_argument("--csv", metavar="FILE", type=Path, default=None,
                    help="Write schedule to a CSV file (use - for standard output).")
     p.add_argument("--html", metavar="FILE", type=Path, default=None,
                    help="Write schedule to an HTML file (use - for standard output).")
-    p.add_argument("--algorithm", choices=["greedy", "session-first", "hill-climbing", "genetic", "all"], default=None,
+    p.add_argument("--html-details", action="store_true", default=False,
+                   help="Include reviewer attendance issues and skipped papers in HTML output.")
+    p.add_argument("-A", "--algorithm", choices=["greedy", "session-first", "hill-climbing", "genetic", "all"], default=None,
                    help="Scheduling algorithm (overrides config; default: 'greedy'). "
                         "Use 'all' to run every algorithm in sequence.")
     return p
@@ -109,6 +119,12 @@ def build_parser() -> argparse.ArgumentParser:
 def main():
     parser = build_parser()
     args = parser.parse_args()
+
+    import colors
+    colors.configure(args.color)
+
+    if args.reviewer_report is None:
+        args.reviewer_report = "summary" if args.verbose else "none"
 
     assignments_path: Optional[Path] = args.assignments
     preferences_path: Optional[Path] = args.schedule
@@ -122,17 +138,21 @@ def main():
         auto_a, auto_s, auto_c = detect_inputs(d)
         if assignments_path is None and auto_a:
             assignments_path = auto_a
-            print(f"Auto-detected assignments: {auto_a}")
+            if args.verbose:
+                print(f"Auto-detected assignments: {auto_a}")
         if preferences_path is None and auto_s:
             preferences_path = auto_s
-            print(f"Auto-detected schedule:     {auto_s}")
+            if args.verbose:
+                print(f"Auto-detected schedule:     {auto_s}")
         if config_path is None and auto_c:
             config_path = auto_c
-            print(f"Auto-detected config:       {auto_c}")
+            if args.verbose:
+                print(f"Auto-detected config:       {auto_c}")
 
     if config_path is None and _DEFAULT_CONFIG.exists():
         config_path = _DEFAULT_CONFIG
-        print(f"Using default config:       {_DEFAULT_CONFIG}")
+        if args.verbose:
+            print(f"Using default config:       {_DEFAULT_CONFIG}")
 
     if not assignments_path and not preferences_path:
         parser.print_help()
@@ -143,19 +163,25 @@ def main():
     config: Config = Config()
 
     if assignments_path:
-        print(f"Loading assignments from {assignments_path} …")
+        if args.verbose:
+            print(f"Loading assignments from {assignments_path} …")
         papers = parse_hotcrp_json(assignments_path)
-        print(f"  {len(papers)} papers loaded.")
+        if args.verbose:
+            print(f"  {len(papers)} papers loaded.")
 
     if preferences_path:
-        print(f"Loading scheduling preferences from {preferences_path} …")
+        if args.verbose:
+            print(f"Loading scheduling preferences from {preferences_path} …")
         prefs = parse_xoyondo_csv(preferences_path)
-        print(f"  {len(prefs.reviewers)} reviewers, {len(prefs.slots)} time slots loaded.")
+        if args.verbose:
+            print(f"  {len(prefs.reviewers)} reviewers, {len(prefs.slots)} time slots loaded.")
 
     if config_path:
-        print(f"Loading config from {config_path} …")
+        if args.verbose:
+            print(f"Loading config from {config_path} …")
         config = parse_config(config_path)
-        print(f"  {config}")
+        if args.verbose:
+            print(f"  {config}")
 
     _ALGORITHMS: dict[str, SchedulingAlgorithm] = {
         "greedy":          GreedyScheduler(),
@@ -177,20 +203,22 @@ def main():
         assign_revs    = extract_assignment_reviewers(papers) if papers else []
         schedule_names = [r.reviewer_name for r in prefs.reviewers] if prefs else []
         reviewers: list[Reviewer] = match_reviewers(assign_revs, schedule_names)
-        print_reviewer_report(reviewers)
+        print_reviewer_report(reviewers, mode=args.reviewer_report)
 
         if papers is not None and prefs is not None:
             for name, algo in algos_to_run:
-                print(f"\n{'='*60}")
-                print(f"Algorithm: {name}")
-                print(f"{'='*60}")
+                if algorithm_name == "all" or args.verbose:
+                    import colors as C
+                    print(f"\n{C.ALGO_HEADER}{'='*60}{C.RESET}")
+                    print(f"{C.ALGO_HEADER}Algorithm: {name}{C.RESET}")
+                    print(f"{C.ALGO_HEADER}{'='*60}{C.RESET}")
                 result: ScheduleResult = algo.schedule(papers, prefs, reviewers, config)
                 compute_reviewer_coverage(result, prefs, reviewers)
                 print_schedule_report(result, config, prefs)
 
                 for flag, writer, label in [
                     (args.csv,  lambda r, p: write_schedule_csv(r, p),                  "csv"),
-                    (args.html, lambda r, p: write_schedule_html(r, config, prefs, p),  "html"),
+                    (args.html, lambda r, p: write_schedule_html(r, config, prefs, p, include_details=args.html_details), "html"),
                 ]:
                     if flag is None:
                         continue

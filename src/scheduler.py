@@ -334,25 +334,28 @@ def _can_attend_any_session(rv: Reviewer, result: ScheduleResult, prefs: Schedul
 
 
 def print_schedule_report(result: ScheduleResult, config: Config, prefs: SchedulingPreferences) -> None:
+    import colors as C
+
     total_assigned = sum(len(s.papers) for s in result.sessions)
     total_warnings = sum(
         1 for s in result.sessions for sp in s.papers if sp.missing_reviewers
     )
-    print(f"\n=== Schedule: {len(result.sessions)} session(s), "
+    print(f"\n{C.HEADER}=== Schedule: {len(result.sessions)} session(s), "
           f"{total_assigned} paper(s) assigned"
           + (f", {total_warnings} reviewer warning(s)" if total_warnings else "")
-          + " ===")
+          + f" ==={C.RESET}")
 
     for sess in result.sessions:
-        print(f"\n{sess}  [{len(sess.papers)}/{sess.capacity_papers} papers]")
+        print(f"\n{C.SESSION_TITLE}{sess}{C.RESET}  [{len(sess.papers)}/{sess.capacity_papers} papers]")
         if len(sess.papers) < config.min_papers_per_session:
-            print(f"  NOTE: only {len(sess.papers)} paper(s) — below minimum of {config.min_papers_per_session}")
+            print(f"  {C.NOTE}NOTE: only {len(sess.papers)} paper(s) — "
+                  f"below minimum of {config.min_papers_per_session}{C.RESET}")
         for sp in sess.papers:
             labels = []
             if _has_tag(sp.paper, config.attention_tags):
-                labels.append("attention")
+                labels.append(f"{C.LABEL_ATTN}attention{C.RESET}")
             if _has_tag(sp.paper, config.one_shot_tags):
-                labels.append("one-shot")
+                labels.append(f"{C.LABEL_SHOT}one-shot{C.RESET}")
             label_str = f" [{', '.join(labels)}]" if labels else ""
 
             title = sp.paper.title
@@ -362,12 +365,14 @@ def print_schedule_report(result: ScheduleResult, config: Config, prefs: Schedul
             parts = []
             if sp.missing_reviewers:
                 names = ", ".join(r.canonical_name for r in sp.missing_reviewers)
-                parts.append(f"unavailable: {names}")
+                parts.append(f"{C.WARN}unavailable: {names}{C.RESET}")
             if sp.unmatched_count:
-                parts.append(f"{sp.unmatched_count} missing")
-            status = "; ".join(parts) if parts else "all present"
+                parts.append(f"{C.DIM_TEXT}{sp.unmatched_count} missing{C.RESET}")
+            status = "; ".join(parts) if parts else f"{C.OK}all present{C.RESET}"
+            if sp.best_effort:
+                status = f"{C.BEST_EFFORT}best effort — {C.RESET}" + status
 
-            print(f"  #{sp.paper.pid:3d}  {title:52s}  [{status}]{label_str}")
+            print(f"  {C.PID}#{sp.paper.pid:3d}{C.RESET}  {title:52s}  [{status}]{label_str}")
 
     # --- Reviewer attendance summary ---
     # Three-way split of missing reviewers:
@@ -393,41 +398,41 @@ def print_schedule_report(result: ScheduleResult, config: Config, prefs: Schedul
                 bucket.setdefault(rv.canonical_name, []).append((sess, sp))
 
     if not sched_conflicts and not no_session_overlap and not no_slots:
-        print("\n=== Reviewer Attendance: all reviewers can attend their assigned sessions ===")
+        print(f"\n{C.HEADER}=== Reviewer Attendance: all reviewers can attend their assigned sessions ==={C.RESET}")
     else:
         total = len(sched_conflicts) + len(no_session_overlap) + len(no_slots)
-        print(f"\n=== Reviewer Attendance Issues ({total} reviewer(s)) ===")
+        print(f"\n{C.HEADER}=== Reviewer Attendance Issues ({total} reviewer(s)) ==={C.RESET}")
 
         if sched_conflicts:
-            print(f"\n  Scheduling conflicts — available at other times, could attend a different session "
-                  f"({len(sched_conflicts)} reviewer(s)):")
+            print(f"\n  {C.CONFLICT}Scheduling conflicts{C.RESET} — available at other times, "
+                  f"could attend a different session ({len(sched_conflicts)} reviewer(s)):")
             for name in sorted(sched_conflicts):
                 for sess, sp in sched_conflicts[name]:
                     title = sp.paper.title if len(sp.paper.title) <= 50 else sp.paper.title[:47] + "..."
-                    print(f"    {name}  —  {sess}  /  #{sp.paper.pid}: {title}")
+                    print(f"    {C.RV_NAME}{name}{C.RESET}  —  {sess}  /  #{sp.paper.pid}: {title}")
 
         if no_session_overlap:
-            print(f"\n  Cannot attend any scheduled session — availability does not overlap "
-                  f"with any session ({len(no_session_overlap)} reviewer(s)):")
+            print(f"\n  {C.NO_OVERLAP}Cannot attend any scheduled session{C.RESET} — "
+                  f"availability does not overlap with any session ({len(no_session_overlap)} reviewer(s)):")
             for name in sorted(no_session_overlap):
                 pids = sorted({sp.paper.pid for _, sp in no_session_overlap[name]})
-                print(f"    {name}  (papers: {', '.join(f'#{p}' for p in pids)})")
+                print(f"    {C.RV_NAME}{name}{C.RESET}  (papers: {', '.join(f'#{p}' for p in pids)})")
 
         if no_slots:
-            print(f"\n  No available slots — reviewer marked no availability at all "
+            print(f"\n  {C.NO_SLOTS}No available slots{C.RESET} — reviewer marked no availability at all "
                   f"({len(no_slots)} reviewer(s)):")
             for name in sorted(no_slots):
                 pids = sorted({sp.paper.pid for _, sp in no_slots[name]})
-                print(f"    {name}  (papers: {', '.join(f'#{p}' for p in pids)})")
+                print(f"    {C.RV_NAME}{name}{C.RESET}  (papers: {', '.join(f'#{p}' for p in pids)})")
 
     if result.unscheduled_papers:
-        print(f"\n=== Unscheduled Papers ({len(result.unscheduled_papers)}) ===")
+        print(f"\n{C.UNSCHEDULED}=== Unscheduled Papers ({len(result.unscheduled_papers)}) ==={C.RESET}")
         for paper, reason in result.unscheduled_papers:
             title = paper.title if len(paper.title) <= 60 else paper.title[:57] + "..."
-            print(f"  #{paper.pid:3d}  {title}  [{reason}]")
+            print(f"  {C.PID}#{paper.pid:3d}{C.RESET}  {title}  [{reason}]")
 
     if result.skipped_papers:
-        print(f"\n=== Skipped Papers ({len(result.skipped_papers)}) ===")
+        print(f"\n{C.SKIPPED}=== Skipped Papers ({len(result.skipped_papers)}) ==={C.RESET}")
         for paper in result.skipped_papers:
             matching = sorted({_tag_base(t) for t in paper.tags} & set(config.skip_tags))
             title = paper.title if len(paper.title) <= 60 else paper.title[:57] + "..."
@@ -565,6 +570,7 @@ def write_schedule_html(
     config: Config,
     prefs: SchedulingPreferences,
     path: Path,
+    include_details: bool = False,
 ) -> None:
     """Write the schedule as a self-contained HTML page (or stdout if path is '-')."""
 
@@ -665,6 +671,16 @@ def write_schedule_html(
         out.append('    </tbody>\n  </table>\n</div>\n')
 
     # ── Reviewer attendance ───────────────────────────────────────────────────
+    if not include_details:
+        out.append('</div>\n</body>\n</html>\n')
+        content = "".join(out)
+        if str(path) == "-":
+            sys.stdout.write(content)
+        else:
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(content)
+        return
+
     out.append("<h2>Reviewer Attendance</h2>\n")
     if not sched_conflicts and not no_session_overlap and not no_slots:
         out.append('<p class="ok-msg">All reviewers can attend their assigned sessions.</p>\n')

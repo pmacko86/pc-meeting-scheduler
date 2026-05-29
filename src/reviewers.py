@@ -210,21 +210,41 @@ def match_reviewers(
     return reviewers
 
 
-def print_reviewer_report(reviewers: list[Reviewer]) -> None:
+def print_reviewer_report(reviewers: list[Reviewer], mode: str = "full") -> None:
+    """Print the reviewer matching report.
+
+    mode:
+      "full"    — full three-section report (default)
+      "summary" — single summary line only
+      "none"    — suppress all output
+    """
+    import colors as C
+
+    if mode == "none":
+        return
+
     only_assignment = [r for r in reviewers if r.assignment and not r.schedule_name]
     only_schedule   = [r for r in reviewers if r.schedule_name and not r.assignment]
     in_both         = [r for r in reviewers if r.assignment and r.schedule_name]
 
-    print(f"\n=== Reviewers only in assignments ({len(only_assignment)}) ===")
+    total_line = (f"{C.TOTAL}Total reviewers: {len(reviewers)}{C.RESET} "
+                  f"({len(in_both)} matched, {len(only_assignment)} assignments-only, "
+                  f"{len(only_schedule)} schedule-only)")
+
+    if mode == "summary":
+        print(total_line)
+        return
+
+    print(f"\n{C.HEADER}=== Reviewers only in assignments ({len(only_assignment)}) ==={C.RESET}")
     for r in sorted(only_assignment, key=lambda x: x.canonical_name):
         assert r.assignment is not None
         print(f"  [{r.reviewer_id:3d}] {r.assignment.display_name} <{r.assignment.email}>")
 
-    print(f"\n=== Reviewers only in schedule ({len(only_schedule)}) ===")
+    print(f"\n{C.HEADER}=== Reviewers only in schedule ({len(only_schedule)}) ==={C.RESET}")
     for r in sorted(only_schedule, key=lambda x: x.canonical_name):
         print(f"  [{r.reviewer_id:3d}] {r.schedule_name}")
 
-    print(f"\n=== Reviewers in both ({len(in_both)}) ===")
+    print(f"\n{C.HEADER}=== Reviewers in both ({len(in_both)}) ==={C.RESET}")
     for r in sorted(in_both, key=lambda x: x.canonical_name):
         assert r.assignment is not None
         same = r.assignment.display_name == r.schedule_name
@@ -235,6 +255,4 @@ def print_reviewer_report(reviewers: list[Reviewer]) -> None:
         else:
             print(f"         <{r.assignment.email}>")
 
-    print(f"\nTotal: {len(reviewers)} reviewers "
-          f"({len(in_both)} matched, {len(only_assignment)} assignments-only, "
-          f"{len(only_schedule)} schedule-only)")
+    print(f"\n{total_line}")
