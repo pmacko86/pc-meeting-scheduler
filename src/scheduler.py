@@ -231,7 +231,7 @@ def _best_effort_place(
 ) -> bool:
     """Place a paper in best-effort mode (below reviewer threshold).
 
-    Picks the slot — existing open session or new — that maximises reviewer
+    Picks the slot — existing open session or new — that maximizes reviewer
     coverage.  An existing session is only reused when it matches the best
     available reviewer count from unused slots; otherwise a new session is
     opened so the paper lands in its most covered slot.

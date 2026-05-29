@@ -93,7 +93,7 @@ def make_tuple_fitness(
     viable_keys: dict[int, set[tuple]],
     min_papers_per_session: int,
 ) -> FitnessFunction:
-    """Original tuple fitness — lexicographic comparison, sessions prioritised.
+    """Original tuple fitness — lexicographic comparison, sessions prioritized.
 
     Components (lower is better):
       1. unscheduled papers

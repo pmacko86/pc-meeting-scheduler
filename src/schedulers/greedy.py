@@ -27,7 +27,7 @@ class GreedyScheduler(SchedulingAlgorithm):
     4. For each paper in order:
        a. Fit into an existing open session (tightest fit).
        b. Open a new session in the unused slot that the most future papers
-          can also use (look-ahead to minimise total sessions).
+          can also use (look-ahead to minimize total sessions).
        c. Best-effort fallback: pick the globally best slot by reviewer count
           — existing or new, whichever covers more reviewers.
     5. Sort sessions chronologically and renumber.

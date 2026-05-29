@@ -108,32 +108,37 @@ min_papers_per_session: 4
 
 # Scheduling algorithm: greedy | session-first | hill-climbing | genetic
 algorithm: greedy
+
+# Timezone shown in the HTML schedule output.
+# Use "auto" to detect the local timezone automatically, or set an explicit
+# string such as "Eastern Time (ET)" or "UTC".
+timezone: auto
 ```
 
 ## Scheduling algorithms
 
 | Algorithm | Description |
 |---|---|
-| `greedy` | Most-constrained-first: schedules papers with fewest viable slots first; uses one-step look-ahead to minimise total sessions. |
+| `greedy` | Most-constrained-first: schedules papers with fewest viable slots first; uses one-step look-ahead to minimize total sessions. |
 | `session-first` | Fills the most-popular slot (most papers viable) first, then repeats. Tends to pack sessions more densely when many papers share availability windows. |
 | `hill-climbing` | Starts from multiple seeds (greedy + session-first + random), then hill-climbs each by trying all single-paper moves and pairwise swaps. Returns the best result across seeds. |
 | `genetic` | Evolves a population of complete assignments using uniform crossover, repair, mutation, and deterministic niching. Seeds from greedy and session-first results. |
 
-All population-based algorithms optimise a weighted fitness score that
-prioritises reviewer attendance above session count.
+All population-based algorithms optimize a weighted fitness score that
+prioritizes reviewer attendance above session count.
 
 Use `-A all` to run every algorithm and compare results side-by-side.
 
 ## Output formats
 
-**Terminal** (default): colour-coded text report (ANSI colours when stdout is
+**Terminal** (default): color-coded text report (ANSI colors when stdout is
 a TTY; plain text when piped).
 
 **CSV** (`--csv FILE`): one row per paper with columns Session, Paper ID,
 Paper Title, Available Reviewers, Unavailable Reviewers, Missing Scheduling
 Info.
 
-**HTML** (`--html FILE`): self-contained single-file report with colour-coded
+**HTML** (`--html FILE`): self-contained single-file report with color-coded
 session cards and reviewer counts. Add `--html-details` to include reviewer
 attendance issues and the skipped-papers list.
 
@@ -164,8 +169,17 @@ src/
     genetic.py           GeneticScheduler
 
 test/
-  input1/                Sample inputs for a real PC meeting
-    fast27spring-rqc.json  HotCRP assignments export
-    Xoyondo.csv            Scheduling preferences
-    config.yaml            Meeting-specific configuration
+  input1/                Anonymized synthetic test inputs (generated via tools/anonymize.py)
+  input2/                ...
+  input3/                ...
+
+data/                    Real conference data — not for distribution
+  <meeting>/             One subdirectory per meeting
+    *-rqc.json           HotCRP assignments export
+    *.csv                Scheduling preferences
+    config.yaml          Meeting-specific configuration
+
+tools/
+  anonymize.py           Anonymize or generate synthetic test inputs
+  README.md              Tool documentation
 ```
