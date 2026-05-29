@@ -4,56 +4,21 @@ import argparse
 import json
 import re
 import sys
-from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
 import yaml
 
+from config import Config
 from papers import Paper, extract_assignment_reviewers, parse_hotcrp_json
+from schedulers import GeneticScheduler, GreedyScheduler, HillClimbingScheduler, SessionFirstScheduler
 from reviewers import Reviewer, match_reviewers, print_reviewer_report
 from schedule import SchedulingPreferences, parse_xoyondo_csv
+from scheduler import ScheduleResult, SchedulingAlgorithm, compute_reviewer_coverage, print_schedule_report
 
 
 # ---------------------------------------------------------------------------
-# Data model
-# ---------------------------------------------------------------------------
-
-@dataclass
-class Config:
-    """Scheduling configuration loaded from YAML/JSON.
-
-    Tag names are matched as prefixes: config tag "pre-accept" matches HotCRP
-    tag "pre-accept#0".
-    """
-    skip_tags: list[str]                = field(default_factory=list)
-    attention_tags: list[str]           = field(default_factory=list)
-    one_shot_tags: list[str]            = field(default_factory=list)
-    minutes_per_paper: int              = 15
-    minutes_per_attention_paper: int    = 15
-    min_reviewers_per_slot: int         = 3
-    session_length: int                 = 120
-
-    def __str__(self) -> str:
-        return (f"skip={self.skip_tags}, attention={self.attention_tags}, "
-                f"one_shot={self.one_shot_tags}, "
-                f"{self.minutes_per_paper}min/paper, "
-                f"{self.minutes_per_attention_paper}min/attention-paper, "
-                f"min_reviewers={self.min_reviewers_per_slot}, "
-                f"session={self.session_length}min")
-
-    def __repr__(self) -> str:
-        return (f"Config(skip_tags={self.skip_tags!r}, "
-                f"attention_tags={self.attention_tags!r}, "
-                f"one_shot_tags={self.one_shot_tags!r}, "
-                f"minutes_per_paper={self.minutes_per_paper}, "
-                f"minutes_per_attention_paper={self.minutes_per_attention_paper}, "
-                f"min_reviewers_per_slot={self.min_reviewers_per_slot}, "
-                f"session_length={self.session_length})")
-
-
-# ---------------------------------------------------------------------------
-# Parser
+# Config parser
 # ---------------------------------------------------------------------------
 
 def parse_config(path: Path) -> Config:
@@ -67,10 +32,11 @@ def parse_config(path: Path) -> Config:
         skip_tags                   = raw.get("skip_tags", []),
         attention_tags              = raw.get("attention_tags", []),
         one_shot_tags               = raw.get("one_shot_tags", []),
-        minutes_per_paper           = raw.get("minutes_per_paper", 15),
-        minutes_per_attention_paper = raw.get("minutes_per_attention_paper", 15),
-        min_reviewers_per_slot      = raw.get("min_reviewers_per_slot", 3),
+        minutes_per_paper      = raw.get("minutes_per_paper", 15),
+        min_reviewers_per_slot = raw.get("min_reviewers_per_slot", 3),
         session_length              = raw.get("session_length", 120),
+        min_papers_per_session      = raw.get("min_papers_per_session", 4),
+        algorithm                   = raw.get("algorithm", "greedy"),
     )
 
 
@@ -126,6 +92,9 @@ def build_parser() -> argparse.ArgumentParser:
                    help="Reviewer scheduling preferences CSV (e.g. from Xoyondo).")
     p.add_argument("-c", "--config", metavar="FILE", type=Path,
                    help="Configuration YAML or JSON file.")
+    p.add_argument("--algorithm", choices=["greedy", "session-first", "hill-climbing", "genetic", "all"], default=None,
+                   help="Scheduling algorithm (overrides config; default: 'greedy'). "
+                        "Use 'all' to run every algorithm in sequence.")
     return p
 
 
@@ -176,11 +145,36 @@ def main():
         config = parse_config(config_path)
         print(f"  {config}")
 
+    _ALGORITHMS: dict[str, SchedulingAlgorithm] = {
+        "greedy":          GreedyScheduler(),
+        "session-first":   SessionFirstScheduler(),
+        "hill-climbing":   HillClimbingScheduler(),
+        "genetic":         GeneticScheduler(),
+    }
+
+    algorithm_name = args.algorithm or config.algorithm
+    if algorithm_name == "all":
+        algos_to_run = list(_ALGORITHMS.items())
+    elif algorithm_name in _ALGORITHMS:
+        algos_to_run = [(algorithm_name, _ALGORITHMS[algorithm_name])]
+    else:
+        print(f"error: unknown algorithm {algorithm_name!r}", file=sys.stderr)
+        sys.exit(1)
+
     if papers is not None or prefs is not None:
         assign_revs    = extract_assignment_reviewers(papers) if papers else []
         schedule_names = [r.reviewer_name for r in prefs.reviewers] if prefs else []
         reviewers: list[Reviewer] = match_reviewers(assign_revs, schedule_names)
         print_reviewer_report(reviewers)
+
+        if papers is not None and prefs is not None:
+            for name, algo in algos_to_run:
+                print(f"\n{'='*60}")
+                print(f"Algorithm: {name}")
+                print(f"{'='*60}")
+                result: ScheduleResult = algo.schedule(papers, prefs, reviewers, config)
+                compute_reviewer_coverage(result, prefs, reviewers)
+                print_schedule_report(result, config, prefs)
 
 
 if __name__ == "__main__":
