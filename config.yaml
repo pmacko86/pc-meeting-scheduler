@@ -36,3 +36,8 @@ min_papers_per_session: 3
 
 # Scheduling algorithm: "greedy", "session-first", or "genetic".
 algorithm: genetic
+
+# Timezone for the HTML schedule output.
+# Use "auto" to detect the local timezone, or set an explicit string such as
+# "Eastern Time (ET)", "Pacific Time (PT)", or "UTC".
+timezone: auto

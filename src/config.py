@@ -18,6 +18,7 @@ class Config:
     session_length: int                 = 120
     min_papers_per_session: int         = 4
     algorithm: str                      = "greedy"
+    timezone: str                       = "auto"
 
     @property
     def papers_per_session(self) -> int:

@@ -7,6 +7,8 @@ Run the tool against the test data:
 ./pc-meeting-scheduler -d test/input1
 ```
 
+Utility scripts live in `tools/` and are documented in `tools/README.md` — do not mention them in the main `README.md`.
+
 Keep `README.md` up to date: when adding or removing command-line options, config keys, algorithms, source files, or output formats, update the relevant section of `README.md` in the same change.
 
 Key conventions:

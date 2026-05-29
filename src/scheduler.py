@@ -571,6 +571,7 @@ def write_schedule_html(
     prefs: SchedulingPreferences,
     path: Path,
     include_details: bool = False,
+    timezone: str = "",
 ) -> None:
     """Write the schedule as a self-contained HTML page (or stdout if path is '-')."""
 
@@ -621,6 +622,7 @@ def write_schedule_html(
     <div class="stat-label">Papers Assigned</div></div>
   <div class="stat"><div class="stat-value">{total_warnings}</div>
     <div class="stat-label">Reviewer Warnings</div></div>
+  {f'<div class="stat"><div class="stat-value">{e(timezone)}</div><div class="stat-label">Timezone</div></div>' if timezone else ""}
 </div>
 """)
 

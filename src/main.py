@@ -25,6 +25,19 @@ from scheduler import (ScheduleResult, SchedulingAlgorithm, compute_reviewer_cov
 # Config parser
 # ---------------------------------------------------------------------------
 
+def resolve_timezone(tz: str) -> str:
+    """Return a display timezone string, auto-detecting if tz == 'auto'."""
+    if tz.lower() != "auto":
+        return tz
+    import datetime
+    dt = datetime.datetime.now().astimezone()
+    abbr = dt.strftime("%Z")
+    offset = dt.strftime("%z")          # e.g. '-0400'
+    sign, hh, mm = offset[0], int(offset[1:3]), int(offset[3:5])
+    utc = f"UTC{sign}{hh}" if mm == 0 else f"UTC{sign}{hh}:{mm:02d}"
+    return f"{abbr} ({utc})"
+
+
 def parse_config(path: Path) -> Config:
     """Parse a YAML or JSON configuration file into a Config object."""
     with open(path) as f:
@@ -41,6 +54,7 @@ def parse_config(path: Path) -> Config:
         session_length              = raw.get("session_length", 120),
         min_papers_per_session      = raw.get("min_papers_per_session", 4),
         algorithm                   = raw.get("algorithm", "greedy"),
+        timezone                    = raw.get("timezone", "auto"),
     )
 
 
@@ -218,7 +232,7 @@ def main():
 
                 for flag, writer, label in [
                     (args.csv,  lambda r, p: write_schedule_csv(r, p),                  "csv"),
-                    (args.html, lambda r, p: write_schedule_html(r, config, prefs, p, include_details=args.html_details), "html"),
+                    (args.html, lambda r, p: write_schedule_html(r, config, prefs, p, include_details=args.html_details, timezone=resolve_timezone(config.timezone)), "html"),
                 ]:
                     if flag is None:
                         continue
