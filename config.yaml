@@ -1,0 +1,38 @@
+# PC Meeting Scheduler — configuration for FAST '27 Spring PC meeting
+#
+# Tags are specified without the HotCRP "#weight" suffix (e.g. "pre-accept"
+# matches papers tagged "pre-accept#0" in the assignments JSON).
+
+# Papers with any of these tags are excluded from the meeting schedule because
+# they have already been decided by the PC chairs before the meeting.
+skip_tags:
+  - one-shot-fall
+  - pre-accept
+  - pre-reject
+  - r1-reject
+
+# Papers tagged with any of these are flagged in the schedule report.
+attention_tags:
+  - pay-attention
+
+# One-shot revision papers.
+one_shot_tags:
+  - one-shot
+
+# Time budget per paper (minutes).
+minutes_per_paper: 10
+
+# Minimum number of reviewers that must be available for a slot to be used
+# for a given paper (reviewers not matched in the schedule are ignored).
+min_reviewers_per_slot: 3
+
+# Length of a single scheduling slot (minutes).
+session_length: 60
+
+# Minimum number of papers to schedule per session.
+# The algorithm prefers slots that can reach this count; sessions that fall
+# short are flagged in the report.
+min_papers_per_session: 3
+
+# Scheduling algorithm: "greedy" or "session-first".
+algorithm: genetic

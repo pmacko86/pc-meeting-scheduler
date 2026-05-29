@@ -7,6 +7,9 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+# Project-root config.yaml used when no other config is specified.
+_DEFAULT_CONFIG = Path(__file__).parent.parent / "config.yaml"
+
 import yaml
 
 from config import Config
@@ -126,6 +129,10 @@ def main():
         if config_path is None and auto_c:
             config_path = auto_c
             print(f"Auto-detected config:       {auto_c}")
+
+    if config_path is None and _DEFAULT_CONFIG.exists():
+        config_path = _DEFAULT_CONFIG
+        print(f"Using default config:       {_DEFAULT_CONFIG}")
 
     if not assignments_path and not preferences_path:
         parser.print_help()
