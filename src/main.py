@@ -1,0 +1,187 @@
+"""PC Meeting Scheduler — main entry point."""
+
+import argparse
+import json
+import re
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Optional
+
+import yaml
+
+from papers import Paper, extract_assignment_reviewers, parse_hotcrp_json
+from reviewers import Reviewer, match_reviewers, print_reviewer_report
+from schedule import SchedulingPreferences, parse_xoyondo_csv
+
+
+# ---------------------------------------------------------------------------
+# Data model
+# ---------------------------------------------------------------------------
+
+@dataclass
+class Config:
+    """Scheduling configuration loaded from YAML/JSON.
+
+    Tag names are matched as prefixes: config tag "pre-accept" matches HotCRP
+    tag "pre-accept#0".
+    """
+    skip_tags: list[str]                = field(default_factory=list)
+    attention_tags: list[str]           = field(default_factory=list)
+    one_shot_tags: list[str]            = field(default_factory=list)
+    minutes_per_paper: int              = 15
+    minutes_per_attention_paper: int    = 15
+    min_reviewers_per_slot: int         = 3
+    session_length: int                 = 120
+
+    def __str__(self) -> str:
+        return (f"skip={self.skip_tags}, attention={self.attention_tags}, "
+                f"one_shot={self.one_shot_tags}, "
+                f"{self.minutes_per_paper}min/paper, "
+                f"{self.minutes_per_attention_paper}min/attention-paper, "
+                f"min_reviewers={self.min_reviewers_per_slot}, "
+                f"session={self.session_length}min")
+
+    def __repr__(self) -> str:
+        return (f"Config(skip_tags={self.skip_tags!r}, "
+                f"attention_tags={self.attention_tags!r}, "
+                f"one_shot_tags={self.one_shot_tags!r}, "
+                f"minutes_per_paper={self.minutes_per_paper}, "
+                f"minutes_per_attention_paper={self.minutes_per_attention_paper}, "
+                f"min_reviewers_per_slot={self.min_reviewers_per_slot}, "
+                f"session_length={self.session_length})")
+
+
+# ---------------------------------------------------------------------------
+# Parser
+# ---------------------------------------------------------------------------
+
+def parse_config(path: Path) -> Config:
+    """Parse a YAML or JSON configuration file into a Config object."""
+    with open(path) as f:
+        if path.suffix in (".yaml", ".yml"):
+            raw = yaml.safe_load(f) or {}
+        else:
+            raw = json.load(f)
+    return Config(
+        skip_tags                   = raw.get("skip_tags", []),
+        attention_tags              = raw.get("attention_tags", []),
+        one_shot_tags               = raw.get("one_shot_tags", []),
+        minutes_per_paper           = raw.get("minutes_per_paper", 15),
+        minutes_per_attention_paper = raw.get("minutes_per_attention_paper", 15),
+        min_reviewers_per_slot      = raw.get("min_reviewers_per_slot", 3),
+        session_length              = raw.get("session_length", 120),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Auto-detection heuristics
+# ---------------------------------------------------------------------------
+
+_HOTCRP_PATTERNS = [re.compile(p, re.IGNORECASE) for p in [
+    r"rqc", r"hotcrp", r"assignments", r"reviews",
+]]
+_XOYONDO_PATTERNS = [re.compile(p, re.IGNORECASE) for p in [
+    r"xoyondo", r"schedule", r"availab", r"preferences", r"when2meet", r"doodle",
+]]
+_CONFIG_PATTERNS = [re.compile(p, re.IGNORECASE) for p in [
+    r"config", r"settings", r"options",
+]]
+
+
+def _score(name: str, patterns: list[re.Pattern]) -> int:
+    return sum(1 for p in patterns if p.search(name))
+
+
+def detect_inputs(directory: Path) -> tuple[Optional[Path], Optional[Path], Optional[Path]]:
+    """Return (assignments, preferences, config) by scanning a directory."""
+    json_files = list(directory.glob("*.json"))
+    csv_files  = list(directory.glob("*.csv"))
+    yaml_files = list(directory.glob("*.yaml")) + list(directory.glob("*.yml"))
+
+    def best(files, patterns):
+        scored = [(f, _score(f.name, patterns)) for f in files if _score(f.name, patterns) > 0]
+        return max(scored, key=lambda x: x[1])[0] if scored else None
+
+    assignments = best(json_files, _HOTCRP_PATTERNS)
+    preferences = best(csv_files, _XOYONDO_PATTERNS)
+    config = best(yaml_files + [f for f in json_files if f != assignments], _CONFIG_PATTERNS)
+    return assignments, preferences, config
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pc-meeting-scheduler",
+        description="Schedule PC meeting sessions from reviewer assignments and availability.",
+    )
+    p.add_argument("-d", "--directory", metavar="DIR", type=Path,
+                   help="Directory to scan for input files (auto-detection by filename heuristics).")
+    p.add_argument("-a", "--assignments", metavar="FILE", type=Path,
+                   help="HotCRP JSON export (JSON for reviewqualitycollector.org).")
+    p.add_argument("-s", "--schedule", metavar="FILE", type=Path,
+                   help="Reviewer scheduling preferences CSV (e.g. from Xoyondo).")
+    p.add_argument("-c", "--config", metavar="FILE", type=Path,
+                   help="Configuration YAML or JSON file.")
+    return p
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+
+    assignments_path: Optional[Path] = args.assignments
+    preferences_path: Optional[Path] = args.schedule
+    config_path:      Optional[Path] = args.config
+
+    if args.directory:
+        d = args.directory
+        if not d.is_dir():
+            print(f"error: {d} is not a directory", file=sys.stderr)
+            sys.exit(1)
+        auto_a, auto_s, auto_c = detect_inputs(d)
+        if assignments_path is None and auto_a:
+            assignments_path = auto_a
+            print(f"Auto-detected assignments: {auto_a}")
+        if preferences_path is None and auto_s:
+            preferences_path = auto_s
+            print(f"Auto-detected schedule:     {auto_s}")
+        if config_path is None and auto_c:
+            config_path = auto_c
+            print(f"Auto-detected config:       {auto_c}")
+
+    if not assignments_path and not preferences_path:
+        parser.print_help()
+        sys.exit(0)
+
+    papers: Optional[list[Paper]] = None
+    prefs:  Optional[SchedulingPreferences] = None
+    config: Config = Config()
+
+    if assignments_path:
+        print(f"Loading assignments from {assignments_path} …")
+        papers = parse_hotcrp_json(assignments_path)
+        print(f"  {len(papers)} papers loaded.")
+
+    if preferences_path:
+        print(f"Loading scheduling preferences from {preferences_path} …")
+        prefs = parse_xoyondo_csv(preferences_path)
+        print(f"  {len(prefs.reviewers)} reviewers, {len(prefs.slots)} time slots loaded.")
+
+    if config_path:
+        print(f"Loading config from {config_path} …")
+        config = parse_config(config_path)
+        print(f"  {config}")
+
+    if papers is not None or prefs is not None:
+        assign_revs    = extract_assignment_reviewers(papers) if papers else []
+        schedule_names = [r.reviewer_name for r in prefs.reviewers] if prefs else []
+        reviewers: list[Reviewer] = match_reviewers(assign_revs, schedule_names)
+        print_reviewer_report(reviewers)
+
+
+if __name__ == "__main__":
+    main()
