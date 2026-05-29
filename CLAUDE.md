@@ -1,21 +1,15 @@
-# PC Meeting Scheduler
+@README.md
 
-## Project Overview
+## Development Notes
 
-The project takes into account the papers that need to be discussed and the reviewers' scheduling
-preferences to create a schedule for the PC meeting.
+Run the tool against the test data:
+```
+./pc-meeting-scheduler -d test/input1
+```
 
-## Data Sources
+Keep `README.md` up to date: when adding or removing command-line options, config keys, algorithms, source files, or output formats, update the relevant section of `README.md` in the same change.
 
-The tool has three main inputs:
-* Reviewer assignments: A JSON file with the paper submissions, tags, and reviewer assignments. In
-  HotCRP, download "JSON for reviewqualitycollector.org"
-* Scheduling preferences: A spreadsheet of reviewers' scheduling preferences, e.g., from Xoyondo.
-* Configuration YAML or JSON: Tags for filtering out papers, etc.
-
-## Project Structure
-
-* `src/`: The source code directory.
-* `src/main.py`: The main source file for the tool.
-* `test/`: Data for testing.
-* `pc-meeting-scheduler`: The main script to run the tool.
+Key conventions:
+- Do not use real reviewer or author names in code comments or docstrings — use clearly fictional names (e.g. "Jane Smith", "Alex Chen") to illustrate examples.
+- Source lives in `src/`; schedulers are under `src/schedulers/`.
+- Shared scheduling infrastructure (data structures, ABC, helpers, report) is in `src/scheduler.py`; population-based utilities shared by hill-climbing and genetic are in `src/schedulers/population.py`.

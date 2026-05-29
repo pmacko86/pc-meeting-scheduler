@@ -1,4 +1,4 @@
-# PC Meeting Scheduler — configuration for FAST '27 Spring PC meeting
+# PC Meeting Scheduler — default configuration
 #
 # Tags are specified without the HotCRP "#weight" suffix (e.g. "pre-accept"
 # matches papers tagged "pre-accept#0" in the assignments JSON).
@@ -34,5 +34,5 @@ session_length: 60
 # short are flagged in the report.
 min_papers_per_session: 3
 
-# Scheduling algorithm: "greedy" or "session-first".
+# Scheduling algorithm: "greedy", "session-first", or "genetic".
 algorithm: genetic
