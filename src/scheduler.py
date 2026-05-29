@@ -1,7 +1,10 @@
 """Scheduling result types, abstract algorithm interface, and report printer."""
 
+import csv
+import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from config import Config
 from papers import Paper
@@ -315,6 +318,20 @@ def _has_any_availability(rv: Reviewer, prefs: SchedulingPreferences) -> bool:
     )
 
 
+def _can_attend_any_session(rv: Reviewer, result: ScheduleResult, prefs: SchedulingPreferences) -> bool:
+    """True if the reviewer can attend at least one session in the schedule."""
+    ra = next((r for r in prefs.reviewers if r.reviewer_name == rv.schedule_name), None)
+    if ra is None:
+        return False
+    return any(
+        all(
+            ra.availability.get(slot, Availability.UNKNOWN) in (Availability.YES, Availability.MAYBE)
+            for slot in sess.slots
+        )
+        for sess in result.sessions
+    )
+
+
 def print_schedule_report(result: ScheduleResult, config: Config, prefs: SchedulingPreferences) -> None:
     total_assigned = sum(len(s.papers) for s in result.sessions)
     total_warnings = sum(
@@ -344,42 +361,59 @@ def print_schedule_report(result: ScheduleResult, config: Config, prefs: Schedul
             parts = []
             if sp.missing_reviewers:
                 names = ", ".join(r.canonical_name for r in sp.missing_reviewers)
-                parts.append(f"missing: {names}")
+                parts.append(f"unavailable: {names}")
             if sp.unmatched_count:
-                parts.append(f"{sp.unmatched_count} no schedule")
+                parts.append(f"{sp.unmatched_count} missing")
             status = "; ".join(parts) if parts else "all present"
 
             print(f"  #{sp.paper.pid:3d}  {title:52s}  [{status}]{label_str}")
 
     # --- Reviewer attendance summary ---
-    # Split missing reviewers into two groups:
-    #   - scheduling conflicts: reviewer has some availability but not in this slot
-    #   - no available slots: reviewer marked themselves unavailable everywhere
+    # Three-way split of missing reviewers:
+    #   - sched_conflicts: has availability AND can attend ≥1 scheduled session
+    #                      → paper could be moved to a slot they can make
+    #   - no_session_overlap: has some availability but none of the scheduled
+    #                         sessions fall in slots they marked available
+    #                         → rescheduling won't help without changing sessions
+    #   - no_slots: marked themselves unavailable everywhere
     sched_conflicts: dict[str, list[tuple[ScheduledSession, ScheduledPaper]]] = {}
+    no_session_overlap: dict[str, list[tuple[ScheduledSession, ScheduledPaper]]] = {}
     no_slots: dict[str, list[tuple[ScheduledSession, ScheduledPaper]]] = {}
 
     for sess in result.sessions:
         for sp in sess.papers:
             for rv in sp.missing_reviewers:
-                bucket = sched_conflicts if _has_any_availability(rv, prefs) else no_slots
+                if not _has_any_availability(rv, prefs):
+                    bucket = no_slots
+                elif _can_attend_any_session(rv, result, prefs):
+                    bucket = sched_conflicts
+                else:
+                    bucket = no_session_overlap
                 bucket.setdefault(rv.canonical_name, []).append((sess, sp))
 
-    if not sched_conflicts and not no_slots:
+    if not sched_conflicts and not no_session_overlap and not no_slots:
         print("\n=== Reviewer Attendance: all reviewers can attend their assigned sessions ===")
     else:
-        total = len(sched_conflicts) + len(no_slots)
+        total = len(sched_conflicts) + len(no_session_overlap) + len(no_slots)
         print(f"\n=== Reviewer Attendance Issues ({total} reviewer(s)) ===")
 
         if sched_conflicts:
-            print(f"\n  Scheduling conflicts — reviewer is available at other times "
+            print(f"\n  Scheduling conflicts — available at other times, could attend a different session "
                   f"({len(sched_conflicts)} reviewer(s)):")
             for name in sorted(sched_conflicts):
                 for sess, sp in sched_conflicts[name]:
                     title = sp.paper.title if len(sp.paper.title) <= 50 else sp.paper.title[:47] + "..."
                     print(f"    {name}  —  {sess}  /  #{sp.paper.pid}: {title}")
 
+        if no_session_overlap:
+            print(f"\n  Cannot attend any scheduled session — availability does not overlap "
+                  f"with any session ({len(no_session_overlap)} reviewer(s)):")
+            for name in sorted(no_session_overlap):
+                pids = sorted({sp.paper.pid for _, sp in no_session_overlap[name]})
+                print(f"    {name}  (papers: {', '.join(f'#{p}' for p in pids)})")
+
         if no_slots:
-            print(f"\n  No available slots — reviewer cannot attend any session "
+            print(f"\n  No available slots — reviewer marked no availability at all "
                   f"({len(no_slots)} reviewer(s)):")
             for name in sorted(no_slots):
                 pids = sorted({sp.paper.pid for _, sp in no_slots[name]})
@@ -397,3 +431,36 @@ def print_schedule_report(result: ScheduleResult, config: Config, prefs: Schedul
             matching = sorted({_tag_base(t) for t in paper.tags} & set(config.skip_tags))
             title = paper.title if len(paper.title) <= 60 else paper.title[:57] + "..."
             print(f"  #{paper.pid:3d}  {title}  [tags: {', '.join(matching)}]")
+
+
+def write_schedule_csv(result: ScheduleResult, path: Path) -> None:
+    """Write the schedule to a CSV file (or stdout when path is '-'), one row per paper."""
+    header = [
+        "Session",
+        "Paper ID",
+        "Paper Title",
+        "Available Reviewers",
+        "Unavailable Reviewers",
+        "Missing Scheduling Info",
+    ]
+
+    def _write(f) -> None:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        for sess in result.sessions:
+            label = str(sess)
+            for sp in sess.papers:
+                writer.writerow([
+                    label,
+                    sp.paper.pid,
+                    sp.paper.title,
+                    len(sp.available_reviewers),
+                    len(sp.missing_reviewers),
+                    sp.unmatched_count,
+                ])
+
+    if str(path) == "-":
+        _write(sys.stdout)
+    else:
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            _write(f)

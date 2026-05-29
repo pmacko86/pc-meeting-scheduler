@@ -14,7 +14,7 @@ from papers import Paper, extract_assignment_reviewers, parse_hotcrp_json
 from schedulers import GeneticScheduler, GreedyScheduler, HillClimbingScheduler, SessionFirstScheduler
 from reviewers import Reviewer, match_reviewers, print_reviewer_report
 from schedule import SchedulingPreferences, parse_xoyondo_csv
-from scheduler import ScheduleResult, SchedulingAlgorithm, compute_reviewer_coverage, print_schedule_report
+from scheduler import ScheduleResult, SchedulingAlgorithm, compute_reviewer_coverage, print_schedule_report, write_schedule_csv
 
 
 # ---------------------------------------------------------------------------
@@ -92,6 +92,8 @@ def build_parser() -> argparse.ArgumentParser:
                    help="Reviewer scheduling preferences CSV (e.g. from Xoyondo).")
     p.add_argument("-c", "--config", metavar="FILE", type=Path,
                    help="Configuration YAML or JSON file.")
+    p.add_argument("--csv", metavar="FILE", type=Path, default=None,
+                   help="Write schedule to a CSV file (use - for standard output).")
     p.add_argument("--algorithm", choices=["greedy", "session-first", "hill-climbing", "genetic", "all"], default=None,
                    help="Scheduling algorithm (overrides config; default: 'greedy'). "
                         "Use 'all' to run every algorithm in sequence.")
@@ -175,6 +177,17 @@ def main():
                 result: ScheduleResult = algo.schedule(papers, prefs, reviewers, config)
                 compute_reviewer_coverage(result, prefs, reviewers)
                 print_schedule_report(result, config, prefs)
+
+                if args.csv is not None:
+                    if str(args.csv) == "-":
+                        csv_path = args.csv
+                    elif len(algos_to_run) > 1:
+                        csv_path = args.csv.parent / f"{args.csv.stem}-{name.replace('-', '_')}{args.csv.suffix}"
+                    else:
+                        csv_path = args.csv
+                    write_schedule_csv(result, csv_path)
+                    if str(csv_path) != "-":
+                        print(f"Schedule written to {csv_path}")
 
 
 if __name__ == "__main__":

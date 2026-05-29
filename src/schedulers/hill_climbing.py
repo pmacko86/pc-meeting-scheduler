@@ -1,7 +1,7 @@
 """Hill-climbing scheduler: local search from multiple seeds."""
 
 import random
-from typing import Optional
+from typing import Any, Optional
 
 from config import Config
 from papers import Paper
@@ -17,10 +17,12 @@ from scheduler import (
 from .greedy import GreedyScheduler
 from .population import (
     Assignment,
+    FitnessFunction,
     _assignment_to_result,
-    _fitness,
     _random_seed,
     _result_to_assignment,
+    compute_reviewer_counts,
+    make_weighted_fitness,
 )
 from .session_first import SessionFirstScheduler
 
@@ -31,12 +33,11 @@ from .session_first import SessionFirstScheduler
 
 def _hill_climb(
     assignment: Assignment,
-    viable_keys: dict[int, set[tuple]],
+    fitness_fn: FitnessFunction,
     all_slot_keys: list[tuple],
     papers_per_session: int,
-    min_papers_per_session: int,
     max_iterations: int,
-) -> tuple[Assignment, tuple]:
+) -> tuple[Assignment, Any]:
     """Improve an assignment by accepting the best neighboring move each step.
 
     Neighbors:
@@ -47,7 +48,7 @@ def _hill_climb(
     Returns (best_assignment, best_fitness).
     """
     current = dict(assignment)
-    current_fitness = _fitness(current, viable_keys, min_papers_per_session)
+    current_fitness = fitness_fn(current)
     pids = list(current.keys())
 
     for _ in range(max_iterations):
@@ -69,7 +70,7 @@ def _hill_climb(
                 if slot_counts.get(new_slot, 0) >= papers_per_session:
                     continue
                 current[pid] = new_slot
-                fit = _fitness(current, viable_keys, min_papers_per_session)
+                fit = fitness_fn(current)
                 current[pid] = old_slot
                 if fit < best_fitness:
                     best_fitness = fit
@@ -82,7 +83,7 @@ def _hill_climb(
                 if current[pid1] == current[pid2]:
                     continue
                 current[pid1], current[pid2] = current[pid2], current[pid1]
-                fit = _fitness(current, viable_keys, min_papers_per_session)
+                fit = fitness_fn(current)
                 current[pid1], current[pid2] = current[pid2], current[pid1]
                 if fit < best_fitness:
                     best_fitness = fit
@@ -122,11 +123,8 @@ class HillClimbingScheduler(SchedulingAlgorithm):
     fitness at each step.  The algorithm stops when no improving move exists
     (local optimum) or max_iterations is reached.
 
-    Fitness (minimised lexicographically):
-      1. unscheduled papers
-      2. number of sessions
-      3. best-effort placements (below reviewer threshold)
-      4. sessions below min_papers_per_session
+    Fitness: weighted scalar — reviewer attendance weighted most highly,
+    then session count, then sessions below minimum.
     """
 
     def __init__(self, n_random_seeds: int = 3, max_iterations: int = 200):
@@ -179,6 +177,13 @@ class HillClimbingScheduler(SchedulingAlgorithm):
             for p in to_schedule
         }
 
+        reviewer_counts, total_matched = compute_reviewer_counts(
+            to_schedule, candidates, reviewer_by_email, avail_by_name,
+        )
+        fitness_fn = make_weighted_fitness(
+            reviewer_counts, total_matched, config.min_papers_per_session,
+        )
+
         # --- Generate seeds ---
         seeds: list[Assignment] = []
         for Scheduler in (GreedyScheduler, SessionFirstScheduler):
@@ -192,12 +197,11 @@ class HillClimbingScheduler(SchedulingAlgorithm):
 
         # --- Hill-climb each seed; keep the best result ---
         best_assignment: Optional[Assignment] = None
-        best_fitness: Optional[tuple] = None
+        best_fitness: Optional[Any] = None
         for seed in seeds:
             assignment, fitness = _hill_climb(
-                seed, viable_keys, all_slot_keys,
-                config.papers_per_session, config.min_papers_per_session,
-                self.max_iterations,
+                seed, fitness_fn, all_slot_keys,
+                config.papers_per_session, self.max_iterations,
             )
             if best_fitness is None or fitness < best_fitness:
                 best_assignment = assignment

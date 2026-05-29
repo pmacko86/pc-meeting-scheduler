@@ -17,11 +17,13 @@ from scheduler import (
 from .greedy import GreedyScheduler
 from .population import (
     Assignment,
+    FitnessFunction,
     _assignment_to_result,
     _distance,
-    _fitness,
     _random_seed,
     _result_to_assignment,
+    compute_reviewer_counts,
+    make_weighted_fitness,
 )
 from .session_first import SessionFirstScheduler
 
@@ -201,11 +203,8 @@ class GeneticScheduler(SchedulingAlgorithm):
       - Mutation:   random per-paper relocation at mutation_rate probability
       - Replacement: deterministic niching
 
-    Fitness (minimised lexicographically, same as hill-climbing for fair comparison):
-      1. unscheduled papers
-      2. number of sessions
-      3. best-effort placements (below reviewer threshold)
-      4. sessions below min_papers_per_session
+    Fitness: weighted scalar — reviewer attendance weighted most highly,
+    then session count, then sessions below minimum.
     """
 
     def __init__(
@@ -271,6 +270,13 @@ class GeneticScheduler(SchedulingAlgorithm):
         pids = list(all_pids)
         rng = random.Random(42)
 
+        reviewer_counts, total_matched = compute_reviewer_counts(
+            to_schedule, candidates, reviewer_by_email, avail_by_name,
+        )
+        fitness_fn: FitnessFunction = make_weighted_fitness(
+            reviewer_counts, total_matched, config.min_papers_per_session,
+        )
+
         # --- Initial population: deterministic seeds + random fill ---
         population: list[Assignment] = []
         for Scheduler in (GreedyScheduler, SessionFirstScheduler):
@@ -281,13 +287,13 @@ class GeneticScheduler(SchedulingAlgorithm):
                 pids, viable_keys, all_slot_keys, config.papers_per_session, rng,
             ))
 
-        fitness_list: list[tuple] = [
-            _fitness(ind, viable_keys, config.min_papers_per_session)
-            for ind in population
-        ]
+        fitness_list = [fitness_fn(ind) for ind in population]
 
         # --- Evolution ---
-        for _ in range(self.n_generations):
+        best_fitness_seen = min(fitness_list)
+        last_improvement_gen = -1
+
+        for gen in range(self.n_generations):
             for _ in range(self.population_size):
                 parent1 = _tournament_select(population, fitness_list, self.tournament_size, rng)
                 parent2 = _tournament_select(population, fitness_list, self.tournament_size, rng)
@@ -306,8 +312,23 @@ class GeneticScheduler(SchedulingAlgorithm):
                     config.papers_per_session, self.mutation_rate, rng,
                 )
 
-                offspring_fitness = _fitness(offspring, viable_keys, config.min_papers_per_session)
-                _niching_replace(population, fitness_list, offspring, offspring_fitness)
+                _niching_replace(population, fitness_list, offspring, fitness_fn(offspring))
+
+            new_best = min(fitness_list)
+            if new_best < best_fitness_seen:
+                best_fitness_seen = new_best
+                last_improvement_gen = gen
+
+        # Warn if the population was still improving when the limit was reached.
+        # We consider "still improving" to mean the last improvement happened in
+        # the final 10 % of generations.
+        still_improving_threshold = self.n_generations - max(1, self.n_generations // 10)
+        if last_improvement_gen >= still_improving_threshold:
+            print(
+                f"WARNING: genetic algorithm was still improving at generation "
+                f"{last_improvement_gen + 1}/{self.n_generations} — "
+                f"consider increasing n_generations (currently {self.n_generations})."
+            )
 
         # --- Return best individual ---
         best_idx = min(range(len(population)), key=lambda i: fitness_list[i])
