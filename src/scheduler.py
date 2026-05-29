@@ -1,6 +1,7 @@
 """Scheduling result types, abstract algorithm interface, and report printer."""
 
 import csv
+import html as _html
 import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -464,3 +465,266 @@ def write_schedule_csv(result: ScheduleResult, path: Path) -> None:
     else:
         with open(path, "w", newline="", encoding="utf-8") as f:
             _write(f)
+
+
+_HTML_CSS = """
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f0f4f8; color: #2d3748; padding: 2rem 1rem;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 1.75rem; color: #1a365d; margin-bottom: 1.5rem; }
+h2 { font-size: 1.1rem; font-weight: 700; color: #2d3748;
+     text-transform: uppercase; letter-spacing: .06em;
+     margin: 2rem 0 .75rem; padding-bottom: .3rem;
+     border-bottom: 2px solid #e2e8f0; }
+h3 { font-size: .8rem; font-weight: 700; text-transform: uppercase;
+     letter-spacing: .06em; margin-bottom: .5rem;
+     padding: .35rem .75rem; border-radius: .25rem; }
+
+.summary {
+    display: flex; gap: 2rem; flex-wrap: wrap;
+    background: #2b6cb0; color: #fff;
+    padding: 1rem 1.5rem; border-radius: .5rem; margin-bottom: 2rem;
+}
+.stat-value { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+.stat-label { font-size: .7rem; opacity: .8; text-transform: uppercase;
+              letter-spacing: .06em; margin-top: .2rem; }
+
+.session { background: #fff; border-radius: .5rem;
+           box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 1.5rem;
+           overflow: hidden; }
+.session-header { background: #ebf8ff; border-bottom: 2px solid #bee3f8;
+                  padding: .7rem 1.25rem;
+                  display: flex; justify-content: space-between; align-items: center; }
+.session-title { font-weight: 700; color: #2b6cb0; font-size: 1rem; }
+.session-meta  { color: #4a5568; font-size: .8rem; }
+.session-note  { background: #fffbeb; border-bottom: 1px solid #f6e05e;
+                 padding: .35rem 1.25rem; font-size: .8rem; color: #744210; }
+
+table.papers { width: 100%; border-collapse: collapse; }
+table.papers thead tr { border-bottom: 2px solid #e2e8f0; }
+table.papers th { background: #f7fafc; padding: .45rem .75rem; text-align: left;
+                  font-size: .68rem; font-weight: 700; text-transform: uppercase;
+                  letter-spacing: .06em; color: #718096; white-space: nowrap; }
+table.papers td { padding: .45rem .75rem; font-size: .84rem;
+                  border-bottom: 1px solid #f0f4f8; vertical-align: middle; }
+table.papers tbody tr:last-child td { border-bottom: none; }
+table.papers tbody tr:hover { background: #f7fafc; }
+
+.pid   { font-family: monospace; color: #718096; white-space: nowrap; }
+.title { }
+th.num, td.num { text-align: center; }
+.avail   { font-weight: 700; }
+.avail.pos { color: #276749; }
+.avail.zero { color: #a0aec0; }
+.unavail { font-weight: 700; }
+.unavail.pos  { color: #c05621; background: #fffbeb; border-radius: .25rem;
+                padding: .1rem .4rem; }
+.unavail.zero { color: #a0aec0; }
+.missing      { color: #a0aec0; }
+.missing.pos  { color: #718096; }
+
+.lbl { display: inline-block; border-radius: .25rem;
+       padding: .1rem .45rem; font-size: .68rem; font-weight: 700;
+       text-transform: uppercase; letter-spacing: .04em; margin-right: .2rem; }
+.lbl-attention  { background: #fefcbf; color: #744210; }
+.lbl-one-shot   { background: #c6f6d5; color: #276749; }
+.lbl-best-effort{ background: #fed7d7; color: #c53030; }
+
+.attendance-group { background: #fff; border-radius: .5rem;
+                    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+                    margin-bottom: 1rem; overflow: hidden; }
+.attendance-group.conflicts   h3 { background: #fffbeb; color: #7b341e; }
+.attendance-group.no-overlap  h3 { background: #fef3c7; color: #92400e; }
+.attendance-group.no-slots    h3 { background: #fee2e2; color: #991b1b; }
+.att-list { list-style: none; }
+.att-list li { padding: .4rem 1rem; font-size: .84rem;
+               border-bottom: 1px solid #f0f4f8; display: flex;
+               gap: .75rem; align-items: baseline; }
+.att-list li:last-child { border-bottom: none; }
+.rv-name   { font-weight: 600; white-space: nowrap; }
+.rv-detail { color: #718096; font-size: .8rem; }
+
+.misc-list { list-style: none; background: #fff; border-radius: .5rem;
+             box-shadow: 0 1px 4px rgba(0,0,0,.08); overflow: hidden;
+             margin-bottom: 1rem; }
+.misc-list li { padding: .5rem 1.25rem; font-size: .84rem;
+                border-bottom: 1px solid #f0f4f8;
+                display: flex; gap: 1rem; align-items: baseline; }
+.misc-list li:last-child { border-bottom: none; }
+.misc-reason { color: #718096; font-size: .8rem; }
+.misc-tags   { color: #c05621; font-size: .78rem; }
+.ok-msg { color: #276749; font-style: italic; margin-bottom: 1rem; }
+"""
+
+
+def write_schedule_html(
+    result: ScheduleResult,
+    config: Config,
+    prefs: SchedulingPreferences,
+    path: Path,
+) -> None:
+    """Write the schedule as a self-contained HTML page (or stdout if path is '-')."""
+
+    def e(s: object) -> str:
+        return _html.escape(str(s))
+
+    total_assigned = sum(len(s.papers) for s in result.sessions)
+    total_warnings = sum(
+        1 for s in result.sessions for sp in s.papers if sp.missing_reviewers
+    )
+
+    # Reviewer attendance groups (same logic as print_schedule_report)
+    sched_conflicts:    dict[str, list[tuple[ScheduledSession, ScheduledPaper]]] = {}
+    no_session_overlap: dict[str, list[tuple[ScheduledSession, ScheduledPaper]]] = {}
+    no_slots:           dict[str, list[tuple[ScheduledSession, ScheduledPaper]]] = {}
+    for sess in result.sessions:
+        for sp in sess.papers:
+            for rv in sp.missing_reviewers:
+                if not _has_any_availability(rv, prefs):
+                    bucket = no_slots
+                elif _can_attend_any_session(rv, result, prefs):
+                    bucket = sched_conflicts
+                else:
+                    bucket = no_session_overlap
+                bucket.setdefault(rv.canonical_name, []).append((sess, sp))
+
+    def cnt(n: int, cls: str) -> str:
+        nz = "pos" if n > 0 else "zero"
+        return f'<td class="num {cls} {nz}">{n}</td>'
+
+    out: list[str] = []
+
+    out.append(f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC Meeting Schedule</title>
+  <style>{_HTML_CSS}</style>
+</head>
+<body>
+<div class="container">
+<h1>PC Meeting Schedule</h1>
+<div class="summary">
+  <div class="stat"><div class="stat-value">{len(result.sessions)}</div>
+    <div class="stat-label">Sessions</div></div>
+  <div class="stat"><div class="stat-value">{total_assigned}</div>
+    <div class="stat-label">Papers Assigned</div></div>
+  <div class="stat"><div class="stat-value">{total_warnings}</div>
+    <div class="stat-label">Reviewer Warnings</div></div>
+</div>
+""")
+
+    # ── Sessions ──────────────────────────────────────────────────────────────
+    out.append("<h2>Sessions</h2>\n")
+    for sess in result.sessions:
+        out.append(
+            f'<div class="session">\n'
+            f'  <div class="session-header">'
+            f'<span class="session-title">{e(sess)}</span>'
+            f'<span class="session-meta">'
+            f'{len(sess.papers)}&nbsp;/&nbsp;{sess.capacity_papers} papers'
+            f'</span></div>\n'
+        )
+        if len(sess.papers) < config.min_papers_per_session:
+            out.append(
+                f'  <div class="session-note">Only {len(sess.papers)} paper(s) '
+                f'— below minimum of {config.min_papers_per_session}</div>\n'
+            )
+        out.append(
+            '  <table class="papers">\n'
+            '    <thead><tr>'
+            '<th>#</th><th>Title</th>'
+            '<th class="num">Available</th>'
+            '<th class="num">Unavailable</th>'
+            '<th class="num">Missing</th>'
+            '<th>Labels</th>'
+            '</tr></thead>\n    <tbody>\n'
+        )
+        for sp in sess.papers:
+            labels: list[str] = []
+            if _has_tag(sp.paper, config.attention_tags):
+                labels.append('<span class="lbl lbl-attention">Attention</span>')
+            if _has_tag(sp.paper, config.one_shot_tags):
+                labels.append('<span class="lbl lbl-one-shot">One-shot</span>')
+            if sp.best_effort:
+                labels.append('<span class="lbl lbl-best-effort">Best effort</span>')
+            out.append(
+                f'      <tr>'
+                f'<td class="pid">#{sp.paper.pid}</td>'
+                f'<td class="title">{e(sp.paper.title)}</td>'
+                + cnt(len(sp.available_reviewers), "avail")
+                + cnt(len(sp.missing_reviewers),   "unavail")
+                + cnt(sp.unmatched_count,            "missing")
+                + f'<td class="labels">{"".join(labels)}</td>'
+                f'</tr>\n'
+            )
+        out.append('    </tbody>\n  </table>\n</div>\n')
+
+    # ── Reviewer attendance ───────────────────────────────────────────────────
+    out.append("<h2>Reviewer Attendance</h2>\n")
+    if not sched_conflicts and not no_session_overlap and not no_slots:
+        out.append('<p class="ok-msg">All reviewers can attend their assigned sessions.</p>\n')
+    else:
+        def _att_group(bucket, css_cls, title):
+            if not bucket:
+                return
+            out.append(
+                f'<div class="attendance-group {css_cls}">\n'
+                f'  <h3>{e(title)} ({len(bucket)})</h3>\n'
+                f'  <ul class="att-list">\n'
+            )
+            for name in sorted(bucket):
+                for sess, sp in bucket[name]:
+                    title_short = sp.paper.title if len(sp.paper.title) <= 55 else sp.paper.title[:52] + "…"
+                    out.append(
+                        f'    <li><span class="rv-name">{e(name)}</span>'
+                        f'<span class="rv-detail">{e(sess)}'
+                        f' &mdash; #{sp.paper.pid}: {e(title_short)}'
+                        f'</span></li>\n'
+                    )
+            out.append('  </ul>\n</div>\n')
+
+        _att_group(sched_conflicts,   "conflicts",
+                   "Scheduling conflicts — available at other times, could attend a different session")
+        _att_group(no_session_overlap, "no-overlap",
+                   "Cannot attend any scheduled session — availability does not overlap with any session")
+        _att_group(no_slots,          "no-slots",
+                   "No available slots — reviewer marked no availability at all")
+
+    # ── Unscheduled ───────────────────────────────────────────────────────────
+    if result.unscheduled_papers:
+        out.append(f"<h2>Unscheduled Papers ({len(result.unscheduled_papers)})</h2>\n"
+                   '<ul class="misc-list">\n')
+        for paper, reason in result.unscheduled_papers:
+            out.append(
+                f'  <li><span class="pid">#{paper.pid}</span>'
+                f'<span>{e(paper.title)}</span>'
+                f'<span class="misc-reason">{e(reason)}</span></li>\n'
+            )
+        out.append('</ul>\n')
+
+    # ── Skipped ───────────────────────────────────────────────────────────────
+    if result.skipped_papers:
+        out.append(f"<h2>Skipped Papers ({len(result.skipped_papers)})</h2>\n"
+                   '<ul class="misc-list">\n')
+        for paper in result.skipped_papers:
+            matching = sorted({_tag_base(t) for t in paper.tags} & set(config.skip_tags))
+            out.append(
+                f'  <li><span class="pid">#{paper.pid}</span>'
+                f'<span>{e(paper.title)}</span>'
+                f'<span class="misc-tags">{e(", ".join(matching))}</span></li>\n'
+            )
+        out.append('</ul>\n')
+
+    out.append('</div>\n</body>\n</html>\n')
+    content = "".join(out)
+
+    if str(path) == "-":
+        sys.stdout.write(content)
+    else:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(content)

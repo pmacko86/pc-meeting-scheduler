@@ -127,7 +127,7 @@ class HillClimbingScheduler(SchedulingAlgorithm):
     then session count, then sessions below minimum.
     """
 
-    def __init__(self, n_random_seeds: int = 3, max_iterations: int = 200):
+    def __init__(self, n_random_seeds: int = 6, max_iterations: int = 200):
         self.n_random_seeds = n_random_seeds
         self.max_iterations = max_iterations
 

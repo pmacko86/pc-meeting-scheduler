@@ -209,7 +209,7 @@ class GeneticScheduler(SchedulingAlgorithm):
 
     def __init__(
         self,
-        population_size: int = 50,
+        population_size: int = 100,
         n_generations: int = 100,
         crossover_rate: float = 0.8,
         mutation_rate: float = 0.05,
