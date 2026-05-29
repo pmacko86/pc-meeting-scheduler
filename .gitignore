@@ -25,6 +25,7 @@ env/
 
 # Output files
 *.csv
+*.html
 *.xlsx
 *.xls
 output/
@@ -32,3 +33,4 @@ output/
 # Sensitive input data (keep test/ data but ignore real conference data)
 *-rqc.json
 *.ods
+data/
