@@ -1,0 +1,1874 @@
+{
+  "hotcrp_version": "generated",
+  "papers": [
+    {
+      "object": "paper",
+      "pid": 1,
+      "title": "Optimizing Storage for GPU Storage with Bloom Filters",
+      "tags": [
+        "one-shot#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 1,
+          "reviewer": "Rachel Ivanov",
+          "reviewer_email": "rachel.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 1,
+          "reviewer": "Eric Lee",
+          "reviewer_email": "eric.lee@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 1,
+          "reviewer": "Diana Garcia",
+          "reviewer_email": "diana.garcia@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 1,
+          "reviewer": "Bianca Jackson",
+          "reviewer_email": "bianca.jackson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 1,
+          "reviewer": "Elena Smith",
+          "reviewer_email": "elena.smith@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 2,
+      "title": "Deployed System: Echo \u2014 Fault-Tolerant Migration at Scale",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 2,
+          "reviewer": "Amit King",
+          "reviewer_email": "amit.king@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 2,
+          "reviewer": "Bianca Jackson",
+          "reviewer_email": "bianca.jackson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 2,
+          "reviewer": "Greta Davis",
+          "reviewer_email": "greta.davis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 2,
+          "reviewer": "Elena Smith",
+          "reviewer_email": "elena.smith@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 2,
+          "reviewer": "Bianca Chen",
+          "reviewer_email": "bianca.chen@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 3,
+      "title": "Flexible Migration Using Probabilistic Data Structures",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 3,
+          "reviewer": "Ivan Nakamura",
+          "reviewer_email": "ivan.nakamura@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 3,
+          "reviewer": "Kira Lee",
+          "reviewer_email": "kira.lee@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 3,
+          "reviewer": "Chloe Davis",
+          "reviewer_email": "chloe.davis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 3,
+          "reviewer": "Alice Dubois",
+          "reviewer_email": "alice.dubois@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 3,
+          "reviewer": "Tara Wright",
+          "reviewer_email": "tara.wright@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 4,
+      "title": "Concurrent Snapshotting Using RDMA",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 4,
+          "reviewer": "Julia Davis",
+          "reviewer_email": "julia.davis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 4,
+          "reviewer": "Helen Jones",
+          "reviewer_email": "helen.jones@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 4,
+          "reviewer": "Chloe Davis",
+          "reviewer_email": "chloe.davis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 4,
+          "reviewer": "Ivan Nakamura",
+          "reviewer_email": "ivan.nakamura@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 5,
+      "title": "Intelligent Compaction Using Sketching",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 5,
+          "reviewer": "Yuki Chen",
+          "reviewer_email": "yuki.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 5,
+          "reviewer": "Zara Lewis",
+          "reviewer_email": "zara.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 5,
+          "reviewer": "Elena Suzuki",
+          "reviewer_email": "elena.suzuki@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 5,
+          "reviewer": "Rachel Kim",
+          "reviewer_email": "rachel.kim@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 5,
+          "reviewer": "Bianca Jackson",
+          "reviewer_email": "bianca.jackson@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 6,
+      "title": "Deployed System: Aether \u2014 Practical Compression at Scale",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 6,
+          "reviewer": "Jonas Ferreira",
+          "reviewer_email": "jonas.ferreira@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 6,
+          "reviewer": "Vera Jackson",
+          "reviewer_email": "vera.jackson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 6,
+          "reviewer": "Vera Patel",
+          "reviewer_email": "vera.patel@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 6,
+          "reviewer": "Vera Thompson",
+          "reviewer_email": "vera.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 6,
+          "reviewer": "Maya Walker",
+          "reviewer_email": "maya.walker@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 7,
+      "title": "Nimbus: A Low-Latency Approach to Erasure Coding",
+      "tags": [
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 7,
+          "reviewer": "Bianca Chen",
+          "reviewer_email": "bianca.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 7,
+          "reviewer": "Xin Ivanov",
+          "reviewer_email": "xin.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 7,
+          "reviewer": "Diana White",
+          "reviewer_email": "diana.white@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 7,
+          "reviewer": "Elena Taylor",
+          "reviewer_email": "elena.taylor@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 8,
+      "title": "Titan: A Fast Approach to Prefetching",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 8,
+          "reviewer": "Bianca King",
+          "reviewer_email": "bianca.king@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 8,
+          "reviewer": "Kira Lee",
+          "reviewer_email": "kira.lee@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 8,
+          "reviewer": "Elena Suzuki",
+          "reviewer_email": "elena.suzuki@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 8,
+          "reviewer": "Alice Dubois",
+          "reviewer_email": "alice.dubois@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 9,
+      "title": "Elastic Eviction for Block Devices via LSM Trees",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 9,
+          "reviewer": "Ingrid Suzuki",
+          "reviewer_email": "ingrid.suzuki@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 9,
+          "reviewer": "Vera Patel",
+          "reviewer_email": "vera.patel@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 9,
+          "reviewer": "Helen King",
+          "reviewer_email": "helen.king@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 9,
+          "reviewer": "Rachel Ivanov",
+          "reviewer_email": "rachel.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 9,
+          "reviewer": "Finn Young",
+          "reviewer_email": "finn.young@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 10,
+      "title": "Short Paper: Efficient Recovery for Persistent Memory",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 10,
+          "reviewer": "Tara Wright",
+          "reviewer_email": "tara.wright@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 10,
+          "reviewer": "Yuki Rossi",
+          "reviewer_email": "yuki.rossi@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 10,
+          "reviewer": "Vera Jackson",
+          "reviewer_email": "vera.jackson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 10,
+          "reviewer": "Yuki Scott",
+          "reviewer_email": "yuki.scott@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 11,
+      "title": "Adaptive Compaction Using RDMA",
+      "tags": [
+        "pre-accept#0",
+        "pay-attention#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 11,
+          "reviewer": "Helen Jones",
+          "reviewer_email": "helen.jones@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 11,
+          "reviewer": "Stefan Jones",
+          "reviewer_email": "stefan.jones@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 11,
+          "reviewer": "Stefan Chen",
+          "reviewer_email": "stefan.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 11,
+          "reviewer": "Diana Garcia",
+          "reviewer_email": "diana.garcia@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 12,
+      "title": "Low-Latency Indexing Using Probabilistic Data Structures",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 12,
+          "reviewer": "Xin Ivanov",
+          "reviewer_email": "xin.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 12,
+          "reviewer": "Finn King",
+          "reviewer_email": "finn.king@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 12,
+          "reviewer": "Rachel Kim",
+          "reviewer_email": "rachel.kim@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 12,
+          "reviewer": "Elena Smith",
+          "reviewer_email": "elena.smith@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 12,
+          "reviewer": "Chloe Kowalski",
+          "reviewer_email": "chloe.kowalski@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 12,
+          "reviewer": "Ingrid Garcia",
+          "reviewer_email": "ingrid.garcia@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 13,
+      "title": "Synapse: Recovery at Scale",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 13,
+          "reviewer": "Finn Lewis",
+          "reviewer_email": "finn.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 13,
+          "reviewer": "Stefan Chen",
+          "reviewer_email": "stefan.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 13,
+          "reviewer": "Ingrid Garcia",
+          "reviewer_email": "ingrid.garcia@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 13,
+          "reviewer": "Zara Lewis",
+          "reviewer_email": "zara.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 13,
+          "reviewer": "Eric Nguyen",
+          "reviewer_email": "eric.nguyen@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 14,
+      "title": "Optimizing Caching for In-Memory Databases with Bloom Filters",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 14,
+          "reviewer": "Kira Thompson",
+          "reviewer_email": "kira.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 14,
+          "reviewer": "Bianca Chen",
+          "reviewer_email": "bianca.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 14,
+          "reviewer": "Stefan Mueller",
+          "reviewer_email": "stefan.mueller@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 14,
+          "reviewer": "Eric Nguyen",
+          "reviewer_email": "eric.nguyen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 14,
+          "reviewer": "Finn Lewis",
+          "reviewer_email": "finn.lewis@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 15,
+      "title": "Toward Flexible Storage in Datacenter Networks",
+      "tags": [
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 15,
+          "reviewer": "Bob Chen",
+          "reviewer_email": "bob.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 15,
+          "reviewer": "Jonas Ferreira",
+          "reviewer_email": "jonas.ferreira@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 15,
+          "reviewer": "Zara Ivanov",
+          "reviewer_email": "zara.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 15,
+          "reviewer": "Bob Kim",
+          "reviewer_email": "bob.kim@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 16,
+      "title": "Efficient Compression with Deep Learning",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 16,
+          "reviewer": "Kira Thompson",
+          "reviewer_email": "kira.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 16,
+          "reviewer": "Yuki Chen",
+          "reviewer_email": "yuki.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 16,
+          "reviewer": "Elena Taylor",
+          "reviewer_email": "elena.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 16,
+          "reviewer": "Maya Walker",
+          "reviewer_email": "maya.walker@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 16,
+          "reviewer": "Oscar Suzuki",
+          "reviewer_email": "oscar.suzuki@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 17,
+      "title": "Sketching-Driven Recovery for Distributed File Systems",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 17,
+          "reviewer": "Zara Lewis",
+          "reviewer_email": "zara.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 17,
+          "reviewer": "Finn Lewis",
+          "reviewer_email": "finn.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 17,
+          "reviewer": "Yuki Rossi",
+          "reviewer_email": "yuki.rossi@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 17,
+          "reviewer": "Xin Harris",
+          "reviewer_email": "xin.harris@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 17,
+          "reviewer": "Zara Torres",
+          "reviewer_email": "zara.torres@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 18,
+      "title": "Short Paper: Disaggregated Partitioning for Key-Value Stores",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 18,
+          "reviewer": "Finn King",
+          "reviewer_email": "finn.king@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 18,
+          "reviewer": "Yuki Scott",
+          "reviewer_email": "yuki.scott@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 18,
+          "reviewer": "Vera Thompson",
+          "reviewer_email": "vera.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 18,
+          "reviewer": "Tara Wright",
+          "reviewer_email": "tara.wright@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 18,
+          "reviewer": "Elena Taylor",
+          "reviewer_email": "elena.taylor@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 19,
+      "title": "RDMA-Driven Storage for Distributed File Systems",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 19,
+          "reviewer": "Zara Lewis",
+          "reviewer_email": "zara.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 19,
+          "reviewer": "Jonas Lewis",
+          "reviewer_email": "jonas.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 19,
+          "reviewer": "George King",
+          "reviewer_email": "george.king@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 19,
+          "reviewer": "Finn Taylor",
+          "reviewer_email": "finn.taylor@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 20,
+      "title": "Efficient Deduplication with Learned Indexes",
+      "tags": [
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 20,
+          "reviewer": "Kira Lee",
+          "reviewer_email": "kira.lee@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 20,
+          "reviewer": "Ingrid Suzuki",
+          "reviewer_email": "ingrid.suzuki@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 20,
+          "reviewer": "Rachel Ivanov",
+          "reviewer_email": "rachel.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 20,
+          "reviewer": "Jonas Ferreira",
+          "reviewer_email": "jonas.ferreira@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 20,
+          "reviewer": "Vera Thompson",
+          "reviewer_email": "vera.thompson@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 21,
+      "title": "Quorum: Load Balancing at Scale",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 21,
+          "reviewer": "Alice Dubois",
+          "reviewer_email": "alice.dubois@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 21,
+          "reviewer": "Elena Brown",
+          "reviewer_email": "elena.brown@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 21,
+          "reviewer": "Amit Anderson",
+          "reviewer_email": "amit.anderson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 21,
+          "reviewer": "Ivan Mueller",
+          "reviewer_email": "ivan.mueller@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 21,
+          "reviewer": "Zara Lewis",
+          "reviewer_email": "zara.lewis@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 22,
+      "title": "Toward Lightweight Compression in Persistent Memory",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 22,
+          "reviewer": "Finn Taylor",
+          "reviewer_email": "finn.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 22,
+          "reviewer": "Stefan Chen",
+          "reviewer_email": "stefan.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 22,
+          "reviewer": "Finn Lewis",
+          "reviewer_email": "finn.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 22,
+          "reviewer": "Stefan Jones",
+          "reviewer_email": "stefan.jones@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 23,
+      "title": "Optimizing Eviction for CXL-Attached Memory with Machine Learning",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 23,
+          "reviewer": "Finn Taylor",
+          "reviewer_email": "finn.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 23,
+          "reviewer": "Stefan Mueller",
+          "reviewer_email": "stefan.mueller@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 23,
+          "reviewer": "Zara Torres",
+          "reviewer_email": "zara.torres@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 23,
+          "reviewer": "Elena Suzuki",
+          "reviewer_email": "elena.suzuki@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 23,
+          "reviewer": "Jonas Lewis",
+          "reviewer_email": "jonas.lewis@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 24,
+      "title": "Practical Snapshotting for Edge Computing via RDMA",
+      "tags": [
+        "one-shot#0",
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 24,
+          "reviewer": "Ingrid Garcia",
+          "reviewer_email": "ingrid.garcia@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 24,
+          "reviewer": "Oscar Suzuki",
+          "reviewer_email": "oscar.suzuki@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 24,
+          "reviewer": "Umar Ferreira",
+          "reviewer_email": "umar.ferreira@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 24,
+          "reviewer": "Julia Thompson",
+          "reviewer_email": "julia.thompson@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 25,
+      "title": "Deployed System: Kronos \u2014 Fault-Tolerant Scheduling at Scale",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 25,
+          "reviewer": "Jonas Ferreira",
+          "reviewer_email": "jonas.ferreira@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 25,
+          "reviewer": "Finn Taylor",
+          "reviewer_email": "finn.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 25,
+          "reviewer": "Yuki Chen",
+          "reviewer_email": "yuki.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 25,
+          "reviewer": "Chloe Davis",
+          "reviewer_email": "chloe.davis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 25,
+          "reviewer": "Ingrid Suzuki",
+          "reviewer_email": "ingrid.suzuki@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 26,
+      "title": "Toward Persistent Data Placement in Datacenter Networks",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 26,
+          "reviewer": "Rachel Kim",
+          "reviewer_email": "rachel.kim@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 26,
+          "reviewer": "Greta Davis",
+          "reviewer_email": "greta.davis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 26,
+          "reviewer": "Stefan Mueller",
+          "reviewer_email": "stefan.mueller@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 26,
+          "reviewer": "Lily Harris",
+          "reviewer_email": "lily.harris@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 26,
+          "reviewer": "Chloe Kowalski",
+          "reviewer_email": "chloe.kowalski@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 27,
+      "title": "Distributed Recovery Using RDMA",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 27,
+          "reviewer": "Lily Harris",
+          "reviewer_email": "lily.harris@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 27,
+          "reviewer": "Alice Dubois",
+          "reviewer_email": "alice.dubois@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 27,
+          "reviewer": "Chloe Kowalski",
+          "reviewer_email": "chloe.kowalski@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 27,
+          "reviewer": "Tara Wright",
+          "reviewer_email": "tara.wright@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 28,
+      "title": "Low-Latency Snapshotting Using Machine Learning",
+      "tags": [
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 28,
+          "reviewer": "Diana White",
+          "reviewer_email": "diana.white@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 28,
+          "reviewer": "Lily Harris",
+          "reviewer_email": "lily.harris@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 28,
+          "reviewer": "Helen Jones",
+          "reviewer_email": "helen.jones@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 28,
+          "reviewer": "Finn Taylor",
+          "reviewer_email": "finn.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 28,
+          "reviewer": "Oscar Suzuki",
+          "reviewer_email": "oscar.suzuki@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 29,
+      "title": "Sampling-Driven Data Placement for Datacenter Networks",
+      "tags": [
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 29,
+          "reviewer": "Umar Mueller",
+          "reviewer_email": "umar.mueller@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 29,
+          "reviewer": "Finn Lewis",
+          "reviewer_email": "finn.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 29,
+          "reviewer": "Zara Lewis",
+          "reviewer_email": "zara.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 29,
+          "reviewer": "Jonas Ferreira",
+          "reviewer_email": "jonas.ferreira@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 29,
+          "reviewer": "Amit Anderson",
+          "reviewer_email": "amit.anderson@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 30,
+      "title": "Prism: A Robust Approach to Prefetching",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 30,
+          "reviewer": "Zara Torres",
+          "reviewer_email": "zara.torres@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 30,
+          "reviewer": "Ivan Nakamura",
+          "reviewer_email": "ivan.nakamura@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 30,
+          "reviewer": "Kira Thompson",
+          "reviewer_email": "kira.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 30,
+          "reviewer": "Priya Davis",
+          "reviewer_email": "priya.davis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 30,
+          "reviewer": "Elena Suzuki",
+          "reviewer_email": "elena.suzuki@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 30,
+          "reviewer": "Vera Jackson",
+          "reviewer_email": "vera.jackson@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 31,
+      "title": "Incremental Scheduling Using Near-Data Processing",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 31,
+          "reviewer": "Jonas Lewis",
+          "reviewer_email": "jonas.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 31,
+          "reviewer": "Umar Ferreira",
+          "reviewer_email": "umar.ferreira@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 31,
+          "reviewer": "Tara Wright",
+          "reviewer_email": "tara.wright@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 31,
+          "reviewer": "Stefan Mueller",
+          "reviewer_email": "stefan.mueller@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 32,
+      "title": "Pulsar: A Compact Approach to Migration",
+      "tags": [
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 32,
+          "reviewer": "Xin Ivanov",
+          "reviewer_email": "xin.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 32,
+          "reviewer": "Lily Harris",
+          "reviewer_email": "lily.harris@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 32,
+          "reviewer": "Elena Brown",
+          "reviewer_email": "elena.brown@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 32,
+          "reviewer": "Greta Davis",
+          "reviewer_email": "greta.davis@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 33,
+      "title": "Deployed System: Echo \u2014 Intelligent Partitioning at Scale",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 33,
+          "reviewer": "Julia Thompson",
+          "reviewer_email": "julia.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 33,
+          "reviewer": "Alice Dubois",
+          "reviewer_email": "alice.dubois@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 33,
+          "reviewer": "Bob Kim",
+          "reviewer_email": "bob.kim@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 33,
+          "reviewer": "Amit King",
+          "reviewer_email": "amit.king@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 33,
+          "reviewer": "Ingrid Suzuki",
+          "reviewer_email": "ingrid.suzuki@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 34,
+      "title": "Short Paper: Elastic Compression for Key-Value Stores",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 34,
+          "reviewer": "Yuki Chen",
+          "reviewer_email": "yuki.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 34,
+          "reviewer": "Kira Thompson",
+          "reviewer_email": "kira.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 34,
+          "reviewer": "Alice Dubois",
+          "reviewer_email": "alice.dubois@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 34,
+          "reviewer": "Stefan Chen",
+          "reviewer_email": "stefan.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 34,
+          "reviewer": "Bob Chen",
+          "reviewer_email": "bob.chen@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 35,
+      "title": "Rethinking Buffering for Key-Value Stores",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 35,
+          "reviewer": "Stefan Jones",
+          "reviewer_email": "stefan.jones@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 35,
+          "reviewer": "Zara Ivanov",
+          "reviewer_email": "zara.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 35,
+          "reviewer": "Elena Smith",
+          "reviewer_email": "elena.smith@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 35,
+          "reviewer": "Chloe Taylor",
+          "reviewer_email": "chloe.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 35,
+          "reviewer": "Amit Anderson",
+          "reviewer_email": "amit.anderson@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 36,
+      "title": "Vega: Indexing at Scale",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 36,
+          "reviewer": "Stefan Chen",
+          "reviewer_email": "stefan.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 36,
+          "reviewer": "Lily Harris",
+          "reviewer_email": "lily.harris@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 36,
+          "reviewer": "Vera Jackson",
+          "reviewer_email": "vera.jackson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 36,
+          "reviewer": "Ivan Nakamura",
+          "reviewer_email": "ivan.nakamura@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 36,
+          "reviewer": "Kira Lee",
+          "reviewer_email": "kira.lee@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 36,
+          "reviewer": "Chloe Davis",
+          "reviewer_email": "chloe.davis@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 37,
+      "title": "Nimbus: Concurrent Erasure Coding for Disaggregated Storage",
+      "tags": [
+        "pre-accept#0",
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 37,
+          "reviewer": "Kira Lee",
+          "reviewer_email": "kira.lee@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 37,
+          "reviewer": "Vera Thompson",
+          "reviewer_email": "vera.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 37,
+          "reviewer": "Umar Mueller",
+          "reviewer_email": "umar.mueller@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 37,
+          "reviewer": "Bob Chen",
+          "reviewer_email": "bob.chen@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 38,
+      "title": "Toward Hierarchical Tiering in Datacenter Networks",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 38,
+          "reviewer": "George Garcia",
+          "reviewer_email": "george.garcia@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 38,
+          "reviewer": "Finn Young",
+          "reviewer_email": "finn.young@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 38,
+          "reviewer": "Bianca King",
+          "reviewer_email": "bianca.king@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 38,
+          "reviewer": "Julia Thompson",
+          "reviewer_email": "julia.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 38,
+          "reviewer": "Ingrid Suzuki",
+          "reviewer_email": "ingrid.suzuki@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 39,
+      "title": "Short Paper: Concurrent Recovery for GPU Storage",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 39,
+          "reviewer": "Oscar Suzuki",
+          "reviewer_email": "oscar.suzuki@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 39,
+          "reviewer": "Diana Garcia",
+          "reviewer_email": "diana.garcia@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 39,
+          "reviewer": "Oscar Thompson",
+          "reviewer_email": "oscar.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 39,
+          "reviewer": "Jonas Ferreira",
+          "reviewer_email": "jonas.ferreira@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 39,
+          "reviewer": "George King",
+          "reviewer_email": "george.king@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 40,
+      "title": "Orion: A Elastic Approach to Caching",
+      "tags": [
+        "pre-accept#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 40,
+          "reviewer": "Umar Ferreira",
+          "reviewer_email": "umar.ferreira@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 40,
+          "reviewer": "Finn Taylor",
+          "reviewer_email": "finn.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 40,
+          "reviewer": "Finn Ivanov",
+          "reviewer_email": "finn.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 40,
+          "reviewer": "Stefan Chen",
+          "reviewer_email": "stefan.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 40,
+          "reviewer": "Rachel Kim",
+          "reviewer_email": "rachel.kim@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 41,
+      "title": "Deployed System: Cipher \u2014 Low-Latency Load Balancing at Scale",
+      "tags": [
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 41,
+          "reviewer": "Stefan Jones",
+          "reviewer_email": "stefan.jones@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 41,
+          "reviewer": "Xin Ivanov",
+          "reviewer_email": "xin.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 41,
+          "reviewer": "Alice Dubois",
+          "reviewer_email": "alice.dubois@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 41,
+          "reviewer": "Ivan Mueller",
+          "reviewer_email": "ivan.mueller@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 41,
+          "reviewer": "Finn Taylor",
+          "reviewer_email": "finn.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 41,
+          "reviewer": "Amit King",
+          "reviewer_email": "amit.king@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 42,
+      "title": "Approximate Computing-Driven Data Placement for Large-Scale Clusters",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 42,
+          "reviewer": "Umar Jones",
+          "reviewer_email": "umar.jones@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 42,
+          "reviewer": "Eric Lee",
+          "reviewer_email": "eric.lee@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 42,
+          "reviewer": "Chloe Kowalski",
+          "reviewer_email": "chloe.kowalski@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 42,
+          "reviewer": "Yuki Rossi",
+          "reviewer_email": "yuki.rossi@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 42,
+          "reviewer": "Elena Smith",
+          "reviewer_email": "elena.smith@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 42,
+          "reviewer": "Xin Ivanov",
+          "reviewer_email": "xin.ivanov@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 43,
+      "title": "Short Paper: Elastic Partitioning for Distributed File Systems",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 43,
+          "reviewer": "Lily Harris",
+          "reviewer_email": "lily.harris@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 43,
+          "reviewer": "Stefan Mueller",
+          "reviewer_email": "stefan.mueller@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 43,
+          "reviewer": "Elena Taylor",
+          "reviewer_email": "elena.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 43,
+          "reviewer": "Jonas Lewis",
+          "reviewer_email": "jonas.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 43,
+          "reviewer": "Finn Taylor",
+          "reviewer_email": "finn.taylor@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 44,
+      "title": "Rethinking Data Placement for Datacenter Networks",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 44,
+          "reviewer": "Rachel Ivanov",
+          "reviewer_email": "rachel.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 44,
+          "reviewer": "Oscar Thompson",
+          "reviewer_email": "oscar.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 44,
+          "reviewer": "Umar Mueller",
+          "reviewer_email": "umar.mueller@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 44,
+          "reviewer": "Eric Nguyen",
+          "reviewer_email": "eric.nguyen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 44,
+          "reviewer": "Ingrid Suzuki",
+          "reviewer_email": "ingrid.suzuki@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 45,
+      "title": "Solaris: Compression at Scale",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 45,
+          "reviewer": "Amit Anderson",
+          "reviewer_email": "amit.anderson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 45,
+          "reviewer": "Finn Ivanov",
+          "reviewer_email": "finn.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 45,
+          "reviewer": "Ivan Nakamura",
+          "reviewer_email": "ivan.nakamura@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 45,
+          "reviewer": "Rachel Kim",
+          "reviewer_email": "rachel.kim@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 45,
+          "reviewer": "Darius Smith",
+          "reviewer_email": "darius.smith@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 46,
+      "title": "Rethinking Prefetching for Disaggregated Storage",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 46,
+          "reviewer": "Chloe Davis",
+          "reviewer_email": "chloe.davis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 46,
+          "reviewer": "Chloe Taylor",
+          "reviewer_email": "chloe.taylor@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 46,
+          "reviewer": "Amit King",
+          "reviewer_email": "amit.king@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 46,
+          "reviewer": "Julia Thompson",
+          "reviewer_email": "julia.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 46,
+          "reviewer": "Umar Jones",
+          "reviewer_email": "umar.jones@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 47,
+      "title": "Rethinking Replication for Edge Computing",
+      "tags": [],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 47,
+          "reviewer": "Zara Lewis",
+          "reviewer_email": "zara.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 47,
+          "reviewer": "Rachel Kim",
+          "reviewer_email": "rachel.kim@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 47,
+          "reviewer": "Kira Thompson",
+          "reviewer_email": "kira.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 47,
+          "reviewer": "Vera Jackson",
+          "reviewer_email": "vera.jackson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 47,
+          "reviewer": "Alice Dubois",
+          "reviewer_email": "alice.dubois@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 48,
+      "title": "Aether: Storage at Scale",
+      "tags": [
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 48,
+          "reviewer": "Xin Ivanov",
+          "reviewer_email": "xin.ivanov@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 48,
+          "reviewer": "Stefan Chen",
+          "reviewer_email": "stefan.chen@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 48,
+          "reviewer": "Oscar Thompson",
+          "reviewer_email": "oscar.thompson@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 48,
+          "reviewer": "Zara Lewis",
+          "reviewer_email": "zara.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 48,
+          "reviewer": "Bob Kim",
+          "reviewer_email": "bob.kim@northbrook-university.edu"
+        }
+      ]
+    },
+    {
+      "object": "paper",
+      "pid": 49,
+      "title": "Probabilistic Data Structures-Driven Prefetching for Object Stores",
+      "tags": [
+        "pre-reject#0"
+      ],
+      "reviews": [
+        {
+          "object": "review",
+          "pid": 49,
+          "reviewer": "Diana White",
+          "reviewer_email": "diana.white@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 49,
+          "reviewer": "Zara Lewis",
+          "reviewer_email": "zara.lewis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 49,
+          "reviewer": "Priya Davis",
+          "reviewer_email": "priya.davis@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 49,
+          "reviewer": "Julia Rodriguez",
+          "reviewer_email": "julia.rodriguez@northbrook-university.edu"
+        },
+        {
+          "object": "review",
+          "pid": 49,
+          "reviewer": "Helen Jones",
+          "reviewer_email": "helen.jones@northbrook-university.edu"
+        }
+      ]
+    }
+  ]
+}
