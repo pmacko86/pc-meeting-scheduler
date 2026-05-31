@@ -119,7 +119,6 @@ def show(paper_id: int, assignments_path: Path, schedule_path: Path,
         return 0
 
     # ── Availability grid ─────────────────────────────────────────────────────
-    # Column widths for reviewer names.
     col_w = [max(len(arv.display_name), 5) for arv, _, _ in matched]
 
     # Group slots by date.
@@ -128,13 +127,29 @@ def show(paper_id: int, assignments_path: Path, schedule_path: Path,
     for slot in prefs.slots:
         by_date.setdefault(slot.date, []).append(slot)
 
+    # First pass: compute per-slot counts to find the global best.
+    slot_counts: dict = {}   # slot -> (n_yes, n_maybe, n_no)
+    for slots in by_date.values():
+        for slot in slots:
+            n_yes = n_maybe = n_no = 0
+            for _, ra, _ in matched:
+                a = ra.availability.get(slot, Availability.UNKNOWN) if ra else Availability.UNKNOWN
+                if a == Availability.YES:
+                    n_yes += 1
+                elif a == Availability.MAYBE:
+                    n_maybe += 1
+                else:
+                    n_no += 1
+            slot_counts[slot] = (n_yes, n_maybe, n_no)
+
+    best_can = max((ny + nm for ny, nm, _ in slot_counts.values()), default=0)
+
     print(f"\n{C.HEADER}Availability by time slot:{C.RESET}")
 
     for date, slots in by_date.items():
         day_str = f"{date.strftime('%a %b')} {date.day}"
         print(f"\n  {C.BOLD}{day_str}{C.RESET}")
 
-        # Column header row.
         header = "        "
         for (arv, _, _), w in zip(matched, col_w):
             header += f"  {arv.display_name[:w]:{w}}"
@@ -146,27 +161,25 @@ def show(paper_id: int, assignments_path: Path, schedule_path: Path,
         for slot in slots:
             h = slot.time.hour
             time_str = f"{h}am" if h < 12 else ("12pm" if h == 12 else f"{h-12}pm")
-            row = f"  {time_str:>5}   "
+            n_yes, n_maybe, n_no = slot_counts[slot]
+            can  = n_yes + n_maybe
+            is_best = best_can > 0 and can == best_can
 
-            n_yes = n_maybe = n_no = 0
+            marker = f"{C.OK}►{C.RESET}" if is_best else " "
+            row = f" {marker} {time_str:>5}   "
+
             for (_, ra, _), w in zip(matched, col_w):
-                if ra is None:
-                    a = Availability.UNKNOWN
-                else:
-                    a = ra.availability.get(slot, Availability.UNKNOWN)
-                if a == Availability.YES:
-                    n_yes += 1
-                elif a == Availability.MAYBE:
-                    n_maybe += 1
-                else:
-                    n_no += 1
-                row += f"  {_avail_str(a):{w - 1 + (len(_avail_str(a)) - 5)}}"
+                a = ra.availability.get(slot, Availability.UNKNOWN) if ra else Availability.UNKNOWN
+                cell = _avail_str(a)
+                row += f"  {cell:{w - 1 + (len(cell) - 5)}}"
 
             clr = _count_color(n_yes, n_maybe, n_matched)
-            can     = n_yes + n_maybe
-            cant    = n_no
-            row += f"   {clr}{can:>5}{C.RESET}  {C.DIM_TEXT}{cant:>5}{C.RESET}"
-            print(f"  {row}")
+            row += f"   {clr}{can:>5}{C.RESET}  {C.DIM_TEXT}{n_no:>5}{C.RESET}"
+
+            if is_best:
+                print(f"  {C.BOLD}{row}{C.RESET}")
+            else:
+                print(f"  {row}")
 
     print()
     return 0

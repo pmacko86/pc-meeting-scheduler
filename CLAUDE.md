@@ -17,7 +17,8 @@ done
 ```
 
 Utility scripts live in `tools/` and are documented in `tools/README.md` — do
-not mention them in the main `README.md`.
+not mention them in the main `README.md`.  Update `tools/README.md` whenever
+a tool's interface or behavior changes (new flags, new output, new tools).
 
 ## Keeping README.md current
 
