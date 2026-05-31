@@ -2,6 +2,36 @@
 
 Utility scripts for the PC Meeting Scheduler.
 
+## paper_schedule.py
+
+Shows reviewer availability for a specific paper across all scheduling time
+slots.  For each slot, it reports how many of the paper's reviewers can (Yes
+or Maybe) and can't attend, and calls out reviewers who provided no
+availability data at all.  Uses color when stdout is a terminal.
+
+```bash
+python tools/paper_schedule.py -d <input-dir> <paper-id>
+python tools/paper_schedule.py -a rqc.json -s schedule.csv 42
+```
+
+Output for each time slot:
+- Per-reviewer availability (Yes / Maybe / No)
+- Count of reviewers who can make it vs. who can't
+- Reviewers flagged as "no available slots" (filled out the poll but always No)
+- Reviewers flagged as "no availability data" (did not fill out the poll at all)
+
+### Options
+
+```
+PAPER_ID                    Paper ID to display
+-d DIR, --directory DIR     Input directory (auto-detects assignments and schedule)
+-a FILE, --assignments      HotCRP RQC JSON file
+-s FILE, --schedule         Scheduling preferences CSV
+-c FILE, --config           Configuration YAML or JSON
+```
+
+---
+
 ## anonymize.py
 
 Generates anonymized test inputs from real HotCRP RQC JSON and Xoyondo CSV
