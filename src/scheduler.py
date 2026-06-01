@@ -25,6 +25,7 @@ class ScheduledPaper:
     available_reviewers: list[Reviewer]   = field(default_factory=list)
     missing_reviewers: list[Reviewer]     = field(default_factory=list)
     unmatched_count: int = 0
+    unmatched_reviewers: list[str]        = field(default_factory=list)
 
     def __str__(self) -> str:
         return f"#{self.paper.pid}: {self.paper.title}"
@@ -302,6 +303,11 @@ def compute_reviewer_coverage(
             sp.available_reviewers = av
             sp.missing_reviewers = mi
             sp.unmatched_count = _count_unmatched(sp.paper, reviewer_by_email)
+            sp.unmatched_reviewers = [
+                arv.display_name for arv in sp.paper.reviewers
+                if arv.email not in reviewer_by_email
+                or reviewer_by_email[arv.email].schedule_name is None
+            ]
 
 
 # ---------------------------------------------------------------------------
@@ -598,8 +604,11 @@ def write_schedule_html(
                     bucket = no_session_overlap
                 bucket.setdefault(rv.canonical_name, []).append((sess, sp))
 
-    def cnt(n: int, cls: str) -> str:
+    def cnt(n: int, cls: str, names: "list[str] | None" = None) -> str:
         nz = "pos" if n > 0 else "zero"
+        if include_details and names is not None:
+            body = "<br>".join([e(nm) for nm in names]) if names else "—"
+            return f'<td class="num {cls} {nz}">{body}</td>'
         return f'<td class="num {cls} {nz}">{n}</td>'
 
     out: list[str] = []
@@ -664,9 +673,12 @@ def write_schedule_html(
                 f'      <tr>'
                 f'<td class="pid">#{sp.paper.pid}</td>'
                 f'<td class="title">{e(sp.paper.title)}</td>'
-                + cnt(len(sp.available_reviewers), "avail")
-                + cnt(len(sp.missing_reviewers),   "unavail")
-                + cnt(sp.unmatched_count,            "missing")
+                + cnt(len(sp.available_reviewers), "avail",
+                      [r.canonical_name for r in sp.available_reviewers])
+                + cnt(len(sp.missing_reviewers),   "unavail",
+                      [r.canonical_name for r in sp.missing_reviewers])
+                + cnt(sp.unmatched_count,           "missing",
+                      sp.unmatched_reviewers)
                 + f'<td class="labels">{"".join(labels)}</td>'
                 f'</tr>\n'
             )
