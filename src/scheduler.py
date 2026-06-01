@@ -658,7 +658,7 @@ def write_schedule_html(
                 labels.append('<span class="lbl lbl-attention">Attention</span>')
             if _has_tag(sp.paper, config.one_shot_tags):
                 labels.append('<span class="lbl lbl-one-shot">One-shot</span>')
-            if sp.best_effort:
+            if sp.best_effort and include_details:
                 labels.append('<span class="lbl lbl-best-effort">Best effort</span>')
             out.append(
                 f'      <tr>'
