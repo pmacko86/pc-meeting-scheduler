@@ -526,7 +526,7 @@ table.papers tbody tr:hover { background: #f7fafc; }
 
 .pid   { font-family: monospace; color: #718096; white-space: nowrap; }
 .title { }
-th.num, td.num { text-align: center; }
+th.num, td.num { text-align: center; white-space: nowrap; }
 .avail   { font-weight: 700; }
 .avail.pos { color: #276749; }
 .avail.zero { color: #a0aec0; }
@@ -674,11 +674,11 @@ def write_schedule_html(
                 f'<td class="pid">#{sp.paper.pid}</td>'
                 f'<td class="title">{e(sp.paper.title)}</td>'
                 + cnt(len(sp.available_reviewers), "avail",
-                      [r.canonical_name for r in sp.available_reviewers])
+                      sorted(r.canonical_name for r in sp.available_reviewers))
                 + cnt(len(sp.missing_reviewers),   "unavail",
-                      [r.canonical_name for r in sp.missing_reviewers])
+                      sorted(r.canonical_name for r in sp.missing_reviewers))
                 + cnt(sp.unmatched_count,           "missing",
-                      sp.unmatched_reviewers)
+                      sorted(sp.unmatched_reviewers))
                 + f'<td class="labels">{"".join(labels)}</td>'
                 f'</tr>\n'
             )
